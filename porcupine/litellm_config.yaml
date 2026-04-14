@@ -1,0 +1,32 @@
+# LiteLLM router configuration for Porcupine
+# Used if running LiteLLM as a local proxy (optional — engine.py calls litellm inline by default)
+#
+# To run as proxy: litellm --config litellm_config.yaml --port 4000
+
+model_list:
+  - model_name: primary
+    litellm_params:
+      model: claude-sonnet-4-20250514
+      api_key: os.environ/ANTHROPIC_API_KEY
+
+  - model_name: secondary
+    litellm_params:
+      model: gemini/gemini-2.0-flash
+      api_key: os.environ/GOOGLE_API_KEY
+
+  - model_name: fallback
+    litellm_params:
+      model: ollama/qwen2.5-coder:32b
+      api_base: http://localhost:11434
+
+router_settings:
+  routing_strategy: latency-based-routing
+  fallbacks:
+    - primary: [secondary]
+    - secondary: [fallback]
+  num_retries: 1
+  timeout: 60
+
+litellm_settings:
+  drop_params: true      # ignore unsupported params per model
+  set_verbose: false
