@@ -1,0 +1,296 @@
+[
+  {
+    "hipaa_id": "ADM-001",
+    "hipaa_spec": "Risk Analysis",
+    "soc2_criteria": ["CC3.2", "CC9.1"],
+    "overlap_type": "Full",
+    "notes": "SOC2 risk assessment artifacts directly satisfy HIPAA risk analysis requirement. Evidence fully reusable."
+  },
+  {
+    "hipaa_id": "ADM-002",
+    "hipaa_spec": "Risk Management",
+    "soc2_criteria": ["CC9.1", "CC9.2"],
+    "overlap_type": "Full",
+    "notes": "SOC2 risk treatment and mitigation documentation covers HIPAA risk management requirements."
+  },
+  {
+    "hipaa_id": "ADM-003",
+    "hipaa_spec": "Sanction Policy",
+    "soc2_criteria": ["CC1.4"],
+    "overlap_type": "Partial",
+    "notes": "SOC2 code of conduct and HR policies cover general workforce sanctions. HIPAA-specific language must be added."
+  },
+  {
+    "hipaa_id": "ADM-004",
+    "hipaa_spec": "Information System Activity Review",
+    "soc2_criteria": ["CC7.2"],
+    "overlap_type": "Full",
+    "notes": "SOC2 log monitoring and review procedures directly satisfy HIPAA activity review requirements."
+  },
+  {
+    "hipaa_id": "ADM-005",
+    "hipaa_spec": "Security Official",
+    "soc2_criteria": ["CC1.3"],
+    "overlap_type": "Full",
+    "notes": "SOC2 security responsibility assignment covers HIPAA Security Officer designation requirement."
+  },
+  {
+    "hipaa_id": "ADM-006",
+    "hipaa_spec": "Authorization and Supervision",
+    "soc2_criteria": ["CC6.3"],
+    "overlap_type": "Partial",
+    "notes": "SOC2 access provisioning covers authorization; ePHI-specific supervision procedures needed."
+  },
+  {
+    "hipaa_id": "ADM-007",
+    "hipaa_spec": "Workforce Clearance Procedure",
+    "soc2_criteria": ["CC1.4"],
+    "overlap_type": "Partial",
+    "notes": "SOC2 background check procedures overlap. HIPAA requires ePHI-specific access appropriateness review."
+  },
+  {
+    "hipaa_id": "ADM-008",
+    "hipaa_spec": "Termination Procedures",
+    "soc2_criteria": ["CC6.2"],
+    "overlap_type": "Full",
+    "notes": "SOC2 offboarding and access revocation procedures fully cover HIPAA termination requirements."
+  },
+  {
+    "hipaa_id": "ADM-009",
+    "hipaa_spec": "Access Authorization",
+    "soc2_criteria": ["CC6.1"],
+    "overlap_type": "Full",
+    "notes": "SOC2 logical access controls and authorization documentation satisfy HIPAA access management."
+  },
+  {
+    "hipaa_id": "ADM-010",
+    "hipaa_spec": "Access Establishment and Modification",
+    "soc2_criteria": ["CC6.1", "CC6.3"],
+    "overlap_type": "Full",
+    "notes": "SOC2 access provisioning and periodic review processes fully cover HIPAA access management lifecycle."
+  },
+  {
+    "hipaa_id": "ADM-011",
+    "hipaa_spec": "Security Reminders",
+    "soc2_criteria": ["CC2.2"],
+    "overlap_type": "Partial",
+    "notes": "SOC2 security awareness program covers reminders. HIPAA-specific ePHI handling content must be included."
+  },
+  {
+    "hipaa_id": "ADM-012",
+    "hipaa_spec": "Protection from Malicious Software",
+    "soc2_criteria": ["CC6.8"],
+    "overlap_type": "Full",
+    "notes": "SOC2 malware protection controls fully satisfy HIPAA malicious software protection requirement."
+  },
+  {
+    "hipaa_id": "ADM-013",
+    "hipaa_spec": "Log-in Monitoring",
+    "soc2_criteria": ["CC7.2"],
+    "overlap_type": "Full",
+    "notes": "SOC2 anomaly detection and login monitoring directly covers HIPAA log-in monitoring."
+  },
+  {
+    "hipaa_id": "ADM-014",
+    "hipaa_spec": "Password Management",
+    "soc2_criteria": ["CC6.1"],
+    "overlap_type": "Full",
+    "notes": "SOC2 password policy and MFA requirements satisfy HIPAA password management controls."
+  },
+  {
+    "hipaa_id": "ADM-015",
+    "hipaa_spec": "Response and Reporting",
+    "soc2_criteria": ["CC7.3", "CC7.4"],
+    "overlap_type": "Full",
+    "notes": "SOC2 incident response procedures cover identification and response. HIPAA adds breach notification requirements."
+  },
+  {
+    "hipaa_id": "ADM-016",
+    "hipaa_spec": "Data Backup Plan",
+    "soc2_criteria": ["A1.2"],
+    "overlap_type": "Full",
+    "notes": "SOC2 availability criteria backup requirements fully satisfy HIPAA data backup plan."
+  },
+  {
+    "hipaa_id": "ADM-017",
+    "hipaa_spec": "Disaster Recovery Plan",
+    "soc2_criteria": ["A1.2", "A1.3"],
+    "overlap_type": "Full",
+    "notes": "SOC2 disaster recovery planning and testing documentation covers HIPAA DR plan requirements."
+  },
+  {
+    "hipaa_id": "ADM-018",
+    "hipaa_spec": "Emergency Mode Operation Plan",
+    "soc2_criteria": ["A1.3"],
+    "overlap_type": "Full",
+    "notes": "SOC2 business continuity documentation covers HIPAA emergency mode operation requirements."
+  },
+  {
+    "hipaa_id": "ADM-019",
+    "hipaa_spec": "Testing and Revision Procedures",
+    "soc2_criteria": ["A1.3"],
+    "overlap_type": "Partial",
+    "notes": "SOC2 BCP testing covers the testing requirement. HIPAA requires documented ePHI-specific recovery validation."
+  },
+  {
+    "hipaa_id": "ADM-020",
+    "hipaa_spec": "Applications and Data Criticality Analysis",
+    "soc2_criteria": ["CC9.1"],
+    "overlap_type": "Partial",
+    "notes": "SOC2 risk assessment includes system criticality. HIPAA requires explicit ePHI data classification layer."
+  },
+  {
+    "hipaa_id": "ADM-021",
+    "hipaa_spec": "Periodic Technical and Non-Technical Evaluation",
+    "soc2_criteria": ["CC4.1", "CC4.2"],
+    "overlap_type": "Full",
+    "notes": "SOC2 monitoring and evaluation activities satisfy HIPAA periodic evaluation requirement."
+  },
+  {
+    "hipaa_id": "ADM-022",
+    "hipaa_spec": "Written Contract or Other Arrangement (BAA)",
+    "soc2_criteria": [],
+    "overlap_type": "None",
+    "notes": "No SOC2 equivalent. BAA management is HIPAA-specific. Vendor management in SOC2 does not cover ePHI disclosure agreements."
+  },
+  {
+    "hipaa_id": "ADM-023",
+    "hipaa_spec": "Annual Training Program",
+    "soc2_criteria": ["CC2.2"],
+    "overlap_type": "Partial",
+    "notes": "SOC2 security awareness training overlaps. Must add HIPAA-specific modules on ePHI handling and breach reporting."
+  },
+  {
+    "hipaa_id": "PHY-001",
+    "hipaa_spec": "Contingency Operations",
+    "soc2_criteria": ["CC6.4"],
+    "overlap_type": "Partial",
+    "notes": "SOC2 physical access controls partially cover emergency facility access. ePHI recovery procedures need documentation."
+  },
+  {
+    "hipaa_id": "PHY-002",
+    "hipaa_spec": "Facility Security Plan",
+    "soc2_criteria": ["CC6.4"],
+    "overlap_type": "Partial",
+    "notes": "SOC2 physical security documentation covers the plan requirement. HIPAA needs ePHI-specific facility controls."
+  },
+  {
+    "hipaa_id": "PHY-003",
+    "hipaa_spec": "Access Control and Validation Procedures",
+    "soc2_criteria": ["CC6.4"],
+    "overlap_type": "Partial",
+    "notes": "SOC2 physical access validation overlaps. Role-based physical access documentation should reference ePHI areas."
+  },
+  {
+    "hipaa_id": "PHY-004",
+    "hipaa_spec": "Maintenance Records",
+    "soc2_criteria": [],
+    "overlap_type": "None",
+    "notes": "No direct SOC2 equivalent. Physical maintenance logs for ePHI systems are HIPAA-specific."
+  },
+  {
+    "hipaa_id": "PHY-005",
+    "hipaa_spec": "Workstation Use Policy",
+    "soc2_criteria": ["CC6.7"],
+    "overlap_type": "Full",
+    "notes": "SOC2 endpoint controls and acceptable use policies satisfy HIPAA workstation use requirement."
+  },
+  {
+    "hipaa_id": "PHY-006",
+    "hipaa_spec": "Workstation Security Controls",
+    "soc2_criteria": ["CC6.7"],
+    "overlap_type": "Full",
+    "notes": "SOC2 endpoint security configuration fully covers HIPAA workstation security controls."
+  },
+  {
+    "hipaa_id": "PHY-007",
+    "hipaa_spec": "Disposal",
+    "soc2_criteria": ["CC6.5"],
+    "overlap_type": "Full",
+    "notes": "SOC2 data disposal and media sanitization policies directly satisfy HIPAA disposal requirement."
+  },
+  {
+    "hipaa_id": "PHY-008",
+    "hipaa_spec": "Media Re-use",
+    "soc2_criteria": ["CC6.5"],
+    "overlap_type": "Full",
+    "notes": "SOC2 media handling procedures cover HIPAA re-use sanitization requirement."
+  },
+  {
+    "hipaa_id": "PHY-009",
+    "hipaa_spec": "Accountability",
+    "soc2_criteria": [],
+    "overlap_type": "None",
+    "notes": "SOC2 does not require hardware movement tracking. Asset inventory partially helps but is not equivalent."
+  },
+  {
+    "hipaa_id": "PHY-010",
+    "hipaa_spec": "Data Backup and Storage",
+    "soc2_criteria": ["A1.2"],
+    "overlap_type": "Full",
+    "notes": "SOC2 backup procedures cover the backup-before-move requirement for ePHI media."
+  },
+  {
+    "hipaa_id": "TEC-001",
+    "hipaa_spec": "Unique User Identification",
+    "soc2_criteria": ["CC6.1", "CC6.2"],
+    "overlap_type": "Full",
+    "notes": "SOC2 identity and access management controls fully satisfy HIPAA unique user ID requirement."
+  },
+  {
+    "hipaa_id": "TEC-002",
+    "hipaa_spec": "Emergency Access Procedure",
+    "soc2_criteria": ["A1.1"],
+    "overlap_type": "Partial",
+    "notes": "SOC2 availability planning partially covers emergency access. Break-glass procedures must be ePHI-specific."
+  },
+  {
+    "hipaa_id": "TEC-003",
+    "hipaa_spec": "Automatic Logoff",
+    "soc2_criteria": ["CC6.1"],
+    "overlap_type": "Full",
+    "notes": "SOC2 session management controls satisfy HIPAA automatic logoff requirement."
+  },
+  {
+    "hipaa_id": "TEC-004",
+    "hipaa_spec": "Encryption and Decryption (at rest)",
+    "soc2_criteria": ["CC6.1", "CC6.7"],
+    "overlap_type": "Full",
+    "notes": "SOC2 data protection controls covering encryption at rest fully satisfy this HIPAA addressable spec."
+  },
+  {
+    "hipaa_id": "TEC-005",
+    "hipaa_spec": "Audit Logging",
+    "soc2_criteria": ["CC7.2"],
+    "overlap_type": "Full",
+    "notes": "SOC2 audit logging requirements are comprehensive and fully satisfy HIPAA audit controls."
+  },
+  {
+    "hipaa_id": "TEC-006",
+    "hipaa_spec": "Mechanism to Authenticate ePHI",
+    "soc2_criteria": ["CC9.1"],
+    "overlap_type": "Partial",
+    "notes": "SOC2 data integrity controls partially cover ePHI integrity verification. Hash/checksum mechanisms need documentation."
+  },
+  {
+    "hipaa_id": "TEC-007",
+    "hipaa_spec": "Authentication",
+    "soc2_criteria": ["CC6.1", "CC6.6"],
+    "overlap_type": "Full",
+    "notes": "SOC2 MFA and authentication controls fully cover HIPAA entity authentication requirement."
+  },
+  {
+    "hipaa_id": "TEC-008",
+    "hipaa_spec": "Integrity Controls (in transit)",
+    "soc2_criteria": ["CC6.7"],
+    "overlap_type": "Full",
+    "notes": "SOC2 transmission security controls satisfy HIPAA in-transit integrity controls."
+  },
+  {
+    "hipaa_id": "TEC-009",
+    "hipaa_spec": "Encryption in Transit",
+    "soc2_criteria": ["CC6.7"],
+    "overlap_type": "Full",
+    "notes": "SOC2 encryption in transit requirements fully satisfy HIPAA transmission encryption addressable spec."
+  }
+]
