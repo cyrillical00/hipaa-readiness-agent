@@ -18,6 +18,7 @@ st.set_page_config(
 )
 
 from auth.login import require_login, get_role, get_auth_mode
+from data.demo_orgs.personas import PERSONAS, get_persona, list_personas
 current_user = require_login()
 current_role = get_role(current_user)
 st.session_state["current_user"] = current_user
@@ -95,18 +96,31 @@ with st.sidebar:
     st.caption("Security Rule Gap Assessment · BAA Tracking · SOC2 Overlap · Remediation")
     st.divider()
 
-    demo = st.toggle("Demo Mode", value=st.session_state.demo_mode, key="demo_mode_toggle")
-    if demo != st.session_state.demo_mode:
-        st.session_state.demo_mode = demo
-        if demo:
-            # Load Meridian Health Tech demo context
-            st.session_state.org_name = "Meridian Health Tech"
-            st.session_state.entity_type = "Business Associate"
-            st.session_state.ephi_systems = ["Cloud Storage", "EHR Integration API", "Billing System", "Internal Messaging"]
-            st.session_state.ephi_leaves_org = True
-            st.session_state.soc2_status = "Type I Complete"
-            st.session_state.remote_workforce = True
-            st.session_state.workforce_size = 150
+    persona_options = ["(none)"] + [p["key"] for p in list_personas()]
+    persona_labels = {p["key"]: p["name"] for p in list_personas()}
+    persona_labels["(none)"] = "No demo (custom)"
+    current_persona = st.session_state.get("demo_persona", "(none)")
+    selected_persona = st.selectbox(
+        "Demo persona",
+        options=persona_options,
+        format_func=lambda k: persona_labels.get(k, k),
+        index=persona_options.index(current_persona) if current_persona in persona_options else 0,
+        key="demo_persona_select",
+    )
+    if selected_persona != current_persona:
+        st.session_state.demo_persona = selected_persona
+        if selected_persona == "(none)":
+            st.session_state.demo_mode = False
+        else:
+            persona = get_persona(selected_persona)
+            st.session_state.demo_mode = True
+            for k, v in persona["org_context"].items():
+                st.session_state[k] = v
+            st.session_state["control_statuses"] = persona["control_statuses"]
+            st.session_state["baa_list"] = persona["baa_list"]
+            if persona.get("assessment_results"):
+                st.session_state["readiness_results"] = persona["assessment_results"]
+                st.session_state["assessment_run"] = True
         st.rerun()
 
     st.markdown("### Organization")
@@ -172,11 +186,9 @@ with col1:
     )
 
 if st.session_state.demo_mode:
-    st.info(
-        "**Demo Mode Active** — Meridian Health Tech: 150-person SaaS Business Associate "
-        "for 3 hospital EHR clients. SOC2 Type I complete. No BAA audit in 2 years.",
-        icon="🎭"
-    )
+    persona = get_persona(st.session_state.get("demo_persona", ""))
+    if persona:
+        st.info(persona["summary"], icon="🎭")
 
 if not st.session_state.org_name:
     st.warning("Enter your organization name in the sidebar to begin, or enable Demo Mode.")
