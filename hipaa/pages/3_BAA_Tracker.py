@@ -1,5 +1,5 @@
 """
-Tab 3 — BAA Tracker
+Tab 3 · BAA Tracker
 Business Associate inventory with risk classification.
 """
 import streamlit as st
@@ -16,7 +16,7 @@ from utils.csv_exporter import export_baa_csv
 from auth.login import require_login
 require_login()
 
-st.set_page_config(page_title="BAA Tracker — HIPAA Agent", layout="wide")
+st.set_page_config(page_title="BAA Tracker · HIPAA Agent", layout="wide")
 st.markdown("# Business Associate Agreement Tracker")
 st.caption(
     "HIPAA §164.308(b) · BAAs are mandatory for any vendor with access to ePHI. "
@@ -91,7 +91,7 @@ if baas:
     with col_info:
         st.markdown("#### Risk Classification Guide")
         risk_guide = [
-            ("🔴 CRITICAL", "#DC2626", "ePHI shared + no BAA in place — immediate action required"),
+            ("🔴 CRITICAL", "#DC2626", "ePHI shared + no BAA in place, immediate action required"),
             ("🟠 HIGH", "#F97316", "BAA in place but expired, or missing breach notification clause"),
             ("🟡 MEDIUM", "#EAB308", "BAA complete but sub-contractors not disclosed"),
             ("🟢 LOW", "#22C55E", "Fully compliant BAA on file"),
@@ -99,7 +99,7 @@ if baas:
         for tier, color, desc in risk_guide:
             st.markdown(
                 f"<div style='padding:6px 0;border-left:3px solid {color};padding-left:10px;margin-bottom:4px'>"
-                f"<strong style='color:{color}'>{tier}</strong> — <span style='color:#94a3b8;font-size:13px'>{desc}</span>"
+                f"<strong style='color:{color}'>{tier}</strong> · <span style='color:#94a3b8;font-size:13px'>{desc}</span>"
                 f"</div>",
                 unsafe_allow_html=True
             )
@@ -171,12 +171,12 @@ if baas:
                 unsafe_allow_html=True
             )
 
-            with st.expander(f"Details — {vendor}"):
+            with st.expander(f"Details · {vendor}"):
                 col1, col2, col3 = st.columns(3)
                 col1.markdown(f"**ePHI Shared:** {'Yes' if baa.get('ephi_shared') else 'No'}")
                 col1.markdown(f"**BAA in Place:** {'Yes' if baa.get('baa_in_place') else '❌ No'}")
-                col1.markdown(f"**Signed Date:** {baa.get('baa_signed_date') or '—'}")
-                col2.markdown(f"**Review Date:** {baa.get('baa_review_date') or '—'}")
+                col1.markdown(f"**Signed Date:** {baa.get('baa_signed_date') or 'n/a'}")
+                col2.markdown(f"**Review Date:** {baa.get('baa_review_date') or 'n/a'}")
                 col2.markdown(f"**Sub-BAs Disclosed:** {'Yes' if baa.get('sub_bas_disclosed') else 'No'}")
                 col2.markdown(f"**Breach Clause:** {'Yes' if baa.get('security_incident_clause') else '❌ No'}")
                 col3.markdown(f"**Breach Window:** {baa.get('breach_notification_window', 'not specified')}")
@@ -197,8 +197,90 @@ if baas:
             mime="text/csv",
         )
 
+    # ── Outreach drafts ───────────────────────────────────────────────────────
+    st.divider()
+    st.markdown("## Outreach")
+    st.caption(
+        "For each missing or expired BAA, draft a vendor-specific outreach "
+        "email using the Claude template engine."
+    )
+
+    gaps = [
+        b for b in baas
+        if b.get("risk_tier") in ("CRITICAL", "HIGH")
+        and (
+            b.get("baa_status") in ("Missing", "Expired")
+            or not b.get("baa_signed_date")
+            or not b.get("baa_in_place")
+            or (b.get("days_until_review") is not None and b.get("days_until_review") < 0)
+        )
+    ]
+
+    if not gaps:
+        st.info("No critical or high-risk BAA gaps detected. Nothing to draft.")
+    else:
+        from engine.baa_engine import list_templates, draft_outreach_email
+        from auth.login import get_current_user_or_none
+        from engine.audit import log_action
+
+        templates = list_templates()
+        template_keys = [t["key"] for t in templates]
+
+        for vendor in gaps:
+            vname = vendor.get("vendor", "Unknown")
+            tier = vendor.get("risk_tier", "HIGH")
+            with st.expander(f"{vname}  ·  {tier}", expanded=False):
+                ephi_scope = vendor.get("ephi_shared")
+                if isinstance(ephi_scope, bool) or ephi_scope is None:
+                    ephi_scope = vendor.get("services") or vendor.get("notes") or "ePHI scope not specified"
+                template_pick = st.selectbox(
+                    "Template",
+                    options=template_keys,
+                    index=0,
+                    key=f"tpl_{vname}",
+                )
+                if st.button("Generate draft", key=f"gen_{vname}"):
+                    org_name = st.session_state.get("org_name", "Our Organization")
+                    requester = get_current_user_or_none() or "Compliance Team"
+                    with st.spinner("Drafting..."):
+                        draft = draft_outreach_email(
+                            vendor_name=vname,
+                            risk_tier=tier,
+                            ephi_scope=str(ephi_scope),
+                            requester_org=org_name,
+                            requester_name=requester,
+                            template_key=template_pick,
+                        )
+                    st.session_state[f"draft_{vname}"] = draft
+                    if requester != "Compliance Team":
+                        try:
+                            log_action(
+                                "baa_outreach_draft",
+                                requester,
+                                0.0,
+                                {"vendor": vname, "template": template_pick},
+                            )
+                        except Exception:
+                            pass
+
+                existing_draft = st.session_state.get(f"draft_{vname}")
+                if existing_draft:
+                    st.text_area(
+                        "Draft (copy and paste into your email client)",
+                        value=existing_draft,
+                        height=300,
+                        key=f"draft_area_{vname}",
+                    )
+                    st.download_button(
+                        "Download as .txt",
+                        data=existing_draft,
+                        file_name=f"baa_outreach_{vname.replace(' ', '_')}.txt",
+                        mime="text/plain",
+                        key=f"dl_{vname}",
+                    )
+
 else:
-    # No BAAs loaded — show add form
+    # No BAAs loaded, show add form
     st.info("No BAA inventory loaded. Enable Demo Mode or add vendors below.")
 
 # ── Add BAA form ──────────────────────────────────────────────────────────────
@@ -244,7 +326,7 @@ with add_tab:
             enriched = enrich_baa_list([new_entry])
             current = st.session_state.baa_list or []
             st.session_state.baa_list = current + enriched
-            st.success(f"Added {vendor_name} — Risk Tier: {enriched[0]['risk_tier']}")
+            st.success(f"Added {vendor_name} · Risk Tier: {enriched[0]['risk_tier']}")
             st.rerun()
 
 with upload_tab:
