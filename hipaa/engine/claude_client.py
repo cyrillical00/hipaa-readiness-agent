@@ -74,6 +74,24 @@ def _strip_json_fences(text: str) -> str:
     return cleaned.strip()
 
 
+def _current_user_safe() -> str | None:
+    """Return logged-in user email or None. Never raises."""
+    try:
+        from auth.login import get_current_user_or_none
+        return get_current_user_or_none()
+    except Exception:
+        return None
+
+
+def _user_role_safe(user: str) -> str:
+    """Return RBAC role for a user, defaulting to 'viewer' on any failure."""
+    try:
+        from auth.login import get_role
+        return get_role(user) or "viewer"
+    except Exception:
+        return "viewer"
+
+
 class ClaudeWrapper:
     def __init__(self, model: str = "claude-sonnet-4-6"):
         self.model = model
@@ -87,6 +105,27 @@ class ClaudeWrapper:
         stream_placeholder=None,
         progress_label: str = "Generating",
     ) -> tuple[dict, dict]:
+        from engine.spend_quota import check_quota, record_spend, QuotaExceededError
+        from engine import audit as _audit
+
+        _user = _current_user_safe()
+        if _user:
+            _role = _user_role_safe(_user)
+            allowed, remaining = check_quota(_user, _role)
+            if not allowed:
+                try:
+                    _audit.log_action(
+                        "quota_block", _user, 0.0,
+                        {"role": _role, "remaining_usd": remaining,
+                         "call_kind": progress_label},
+                    )
+                except Exception:
+                    pass
+                raise QuotaExceededError(
+                    f"Daily Claude spend cap reached for role '{_role}'. "
+                    f"Remaining today: ${max(remaining, 0.0):.2f}."
+                )
+
         full_text = ""
         final_usage = None
 
@@ -129,6 +168,28 @@ class ClaudeWrapper:
         }
 
         _get_usage_log().append(usage_dict)
+
+        if _user:
+            try:
+                record_spend(_user, cost, self.model, progress_label)
+            except Exception:
+                pass
+            try:
+                _audit.log_action(
+                    f"claude_call:{progress_label}",
+                    _user,
+                    cost,
+                    {
+                        "model": self.model,
+                        "input_tokens": input_tokens,
+                        "output_tokens": output_tokens,
+                        "cache_read": cache_read,
+                        "cache_creation": cache_creation,
+                    },
+                )
+            except Exception:
+                pass
+
         return parsed, usage_dict
 
 

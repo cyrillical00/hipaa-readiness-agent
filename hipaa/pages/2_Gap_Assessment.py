@@ -13,6 +13,10 @@ from engine.control_mapper import load_controls, map_connector_findings, merge_a
 from engine.scorer import compute_readiness, GAP_TIERS, get_readiness_band
 from engine.roadmap_generator import score_assessment_with_claude
 from data.sample_assessment import DEMO_CONTROL_STATUSES, DEMO_ORG_CONTEXT
+from auth.login import require_login, get_current_user_or_none
+from storage.github_jsonl import append_record
+from engine.audit import log_action
+require_login()
 
 st.set_page_config(page_title="Gap Assessment — HIPAA Agent", layout="wide")
 st.markdown("# Gap Assessment")
@@ -335,7 +339,32 @@ if st.session_state.get("assessment_run") and st.session_state.get("readiness_re
 
                     st.markdown("</div>", unsafe_allow_html=True)
 
-    # ── Export ────────────────────────────────────────────────────────────────
+    st.divider()
+    st.markdown("### Save to history")
+    save_user = get_current_user_or_none()
+    save_disabled = not bool(save_user)
+    if st.button("Save assessment to history", disabled=save_disabled):
+        org_for_save = st.session_state.get("org_name", "Organization")
+        try:
+            append_record(save_user, "assessments", {
+                "org_name": org_for_save,
+                "overall_score": float(r.get("overall", 0.0) or 0.0),
+                "band_label": r.get("band_label", ""),
+                "critical_gaps": r.get("critical_gaps", []) or [],
+                "high_gaps": r.get("high_gaps", []) or [],
+                "full_results": r,
+            })
+            try:
+                log_action("assessment_save", save_user, 0.0, {
+                    "org_name": org_for_save,
+                    "overall_score": float(r.get("overall", 0.0) or 0.0),
+                })
+            except Exception as audit_err:
+                st.caption(f"Audit log skipped: {audit_err}")
+            st.success("Saved to history. Open the History page to review.")
+        except Exception as save_err:
+            st.warning(f"Save to history failed: {save_err}")
+
     st.divider()
     st.markdown("### Export Assessment")
     from utils.csv_exporter import export_assessment_csv

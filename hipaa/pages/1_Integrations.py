@@ -16,6 +16,8 @@ from connectors.jira import JiraConnector, JIRA_DEMO_FINDINGS
 from connectors.confluence import ConfluenceConnector, CONFLUENCE_DEMO_FINDINGS
 from connectors.intune import IntuneConnector, INTUNE_DEMO_FINDINGS
 from connectors.gcp import GCPConnector, GCP_DEMO_FINDINGS
+from auth.login import require_login
+require_login()
 
 st.set_page_config(page_title="Integrations — HIPAA Agent", layout="wide")
 st.markdown("# Integrations")
