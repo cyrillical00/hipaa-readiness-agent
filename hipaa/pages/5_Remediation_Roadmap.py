@@ -12,14 +12,22 @@ from engine.soc2_crosswalk import load_crosswalk, compute_overlap
 from engine.baa_engine import baa_summary as compute_baa_summary, enrich_baa_list
 from engine.control_mapper import load_controls
 from engine.validator import validate_roadmap
+from engine.scorer import compute_readiness
 from engine.spend_quota import QuotaExceededError
 from data.sample_assessment import DEMO_ORG_CONTEXT
 from data.sample_baas import DEMO_BAAS
 from utils.csv_exporter import export_roadmap_csv
 from ui.cost_panel import render_cost_panel
 from auth.login import require_login, get_current_user_or_none
-from storage.github_jsonl import append_record
+from storage.github_jsonl import append_record, list_records
 from uuid import uuid4
+
+try:
+    from engine.roadmap_generator import generate_roadmap_refined
+    REFINE_AVAILABLE = True
+except ImportError:
+    REFINE_AVAILABLE = False
+
 require_login()
 
 st.set_page_config(page_title="Remediation Roadmap · HIPAA Agent", layout="wide")
@@ -129,16 +137,41 @@ if gen_clicked:
     else:
         with st.spinner("Claude is generating your HIPAA remediation roadmap..."):
             progress_placeholder = st.empty()
+
+            def _on_pass(pass_num, status, notes):
+                progress_placeholder.text(f"Refine pass {pass_num}: {status}")
+
             try:
-                roadmap = generate_roadmap(
-                    readiness, controls, baa_sum, overlap, org_context, progress_placeholder
-                )
-                st.session_state.roadmap = roadmap
-                critical_gaps = readiness.get("critical_gaps", [])
-                high_gaps = readiness.get("high_gaps", [])
-                st.session_state.roadmap_validation = validate_roadmap(
-                    roadmap, critical_gaps, high_gaps, controls
-                )
+                if REFINE_AVAILABLE:
+                    result = generate_roadmap_refined(
+                        readiness, controls, baa_sum, overlap, org_context,
+                        stream_placeholder=progress_placeholder,
+                        max_passes=3,
+                        on_pass=_on_pass,
+                    )
+                    st.session_state.roadmap = result.roadmap
+                    st.session_state.roadmap_validation = result.validation
+                    st.session_state.roadmap_refine = {
+                        "pass_count": result.pass_count,
+                        "history": result.history,
+                    }
+                    roadmap = result.roadmap
+                else:
+                    roadmap = generate_roadmap(
+                        readiness, controls, baa_sum, overlap, org_context, progress_placeholder
+                    )
+                    st.session_state.roadmap = roadmap
+                    critical_gaps = readiness.get("critical_gaps", [])
+                    high_gaps = readiness.get("high_gaps", [])
+                    st.session_state.roadmap_validation = validate_roadmap(
+                        roadmap, critical_gaps, high_gaps, controls
+                    )
+                    st.session_state.pop("roadmap_refine", None)
+
+                new_roadmap_id = str(uuid4())
+                st.session_state["roadmap_id"] = new_roadmap_id
+                st.session_state["roadmap_items_complete"] = set()
+
                 save_user = get_current_user_or_none()
                 if save_user:
                     try:
@@ -146,7 +179,7 @@ if gen_clicked:
                             len(p.get("items", []) or []) for p in roadmap.get("phases", []) or []
                         )
                         append_record(save_user, "roadmap_state", {
-                            "roadmap_id": str(uuid4()),
+                            "roadmap_id": new_roadmap_id,
                             "items_total": items_total,
                             "items_complete": 0,
                         })
@@ -156,7 +189,8 @@ if gen_clicked:
                 st.rerun()
             except QuotaExceededError as qe:
                 progress_placeholder.empty()
-                st.error(f"Daily spend quota exceeded: {qe}")
+                st.error(str(qe))
+                st.stop()
             except Exception as e:
                 progress_placeholder.empty()
                 st.error(f"Roadmap generation failed: {e}")
@@ -179,6 +213,17 @@ if roadmap:
             st.warning(f"Validator flagged issues. Missing critical controls: {v_missing}. {v_notes}")
         elif v_status == "fail":
             st.error(f"Validator FAILED. Hallucinated controls: {v_hallucinated}. {v_notes}")
+
+    refine_meta = st.session_state.get("roadmap_refine")
+    if refine_meta:
+        st.caption(f"Validator passes: {refine_meta['pass_count']} of 3")
+        with st.expander("Refine history", expanded=False):
+            for entry in refine_meta["history"]:
+                st.write(f"Pass {entry['pass']}: **{entry['status']}**  ·  {entry.get('notes', '')}")
+                if entry.get("missing"):
+                    st.caption(f"missing: {', '.join(entry['missing'])}")
+                if entry.get("hallucinated"):
+                    st.caption(f"hallucinated: {', '.join(entry['hallucinated'])}")
 
     # Executive summary
     risk_tier = roadmap.get("overall_risk_tier", "UNKNOWN")
@@ -213,6 +258,23 @@ if roadmap:
 
     st.divider()
 
+    roadmap_id = st.session_state.get("roadmap_id") or "current"
+    completed = st.session_state.setdefault("roadmap_items_complete", set())
+
+    if not completed:
+        hydrate_user = get_current_user_or_none()
+        if hydrate_user:
+            try:
+                prior = list_records(hydrate_user, "roadmap_items")
+                for rec in prior:
+                    rid = rec.get("roadmap_id", "")
+                    cid = rec.get("control_id", "")
+                    title = rec.get("title", "")
+                    if rid and rid == roadmap_id:
+                        completed.add(f"{rid}:{cid}:{title[:40]}")
+            except Exception:
+                pass
+
     # Phase cards
     phase_colors = {1: "#DC2626", 2: "#F97316", 3: "#6366F1"}
     phase_icons = {1: "🚨", 2: "📋", 3: "🏆"}
@@ -222,6 +284,18 @@ if roadmap:
         phase_color = phase_colors.get(phase_num, "#6366F1")
         phase_icon = phase_icons.get(phase_num, "📌")
         items = phase.get("items", [])
+
+        phase_items = items
+        done_count = sum(
+            1 for it in phase_items
+            if f"{roadmap_id}:{it.get('control_id', '')}:{it.get('title', '')[:40]}" in completed
+        )
+        total_count = len(phase_items)
+        if total_count:
+            st.progress(
+                done_count / total_count,
+                text=f"Phase {phase.get('phase')}: {done_count} of {total_count} complete",
+            )
 
         priority_counts = {}
         for item in items:
@@ -293,6 +367,29 @@ if roadmap:
                     unsafe_allow_html=True
                 )
 
+                key = f"{roadmap_id}:{item.get('control_id', '')}:{item.get('title', '')[:40]}"
+                is_done = st.checkbox(
+                    "Mark complete",
+                    value=key in completed,
+                    key=f"chk_{key}",
+                )
+                if is_done and key not in completed:
+                    completed.add(key)
+                    save_user = get_current_user_or_none()
+                    if save_user:
+                        try:
+                            append_record(save_user, "roadmap_items", {
+                                "roadmap_id": roadmap_id,
+                                "control_id": item.get("control_id", ""),
+                                "title": item.get("title", ""),
+                                "phase": phase.get("phase"),
+                                "marked_at": None,
+                            })
+                        except Exception:
+                            pass
+                elif not is_done and key in completed:
+                    completed.discard(key)
+
     # ── Export ────────────────────────────────────────────────────────────────
     st.divider()
     st.markdown("### Export Roadmap")
@@ -311,6 +408,53 @@ if roadmap:
             "CSV includes Summary, Description, Priority, Estimate, Labels, and Phase, "
             "ready to import directly into Jira as a project sprint."
         )
+
+    st.divider()
+    st.markdown("## Re-assess and diff")
+    st.caption(
+        "Recompute the readiness score against your current control statuses, "
+        "then compare against the saved baseline."
+    )
+
+    if st.button("Re-assess now", type="primary"):
+        statuses = st.session_state.get("control_statuses", {})
+        new_results = compute_readiness(controls, statuses, org_context)
+        st.session_state.reassess_results = new_results
+        save_user = get_current_user_or_none()
+        if save_user:
+            try:
+                append_record(save_user, "reassessments", {
+                    "overall": new_results.get("overall"),
+                    "band_label": new_results.get("band_label"),
+                    "critical_count": len(new_results.get("critical_gaps", [])),
+                    "high_count": len(new_results.get("high_gaps", [])),
+                })
+            except Exception:
+                pass
+        st.rerun()
+
+    baseline = st.session_state.get("readiness_results")
+    new_results = st.session_state.get("reassess_results")
+    if baseline and new_results:
+        col1, col2, col3 = st.columns(3)
+        delta_overall = new_results["overall"] - baseline["overall"]
+        col1.metric("Overall", f"{new_results['overall']:.1f}%", f"{delta_overall:+.1f}")
+        base_crit = {g["control_id"] for g in baseline.get("critical_gaps", [])}
+        new_crit = {g["control_id"] for g in new_results.get("critical_gaps", [])}
+        closed = sorted(base_crit - new_crit)
+        new_or_regressed = sorted(new_crit - base_crit)
+        col2.metric(
+            "Critical gaps",
+            len(new_crit),
+            f"{len(new_crit) - len(base_crit):+d}",
+            delta_color="inverse",
+        )
+        col3.metric("Closed", len(closed))
+
+        if closed:
+            st.success(f"Closed since baseline: {', '.join(closed)}")
+        if new_or_regressed:
+            st.warning(f"New or regressed: {', '.join(new_or_regressed)}")
 
 else:
     if not gen_clicked:
