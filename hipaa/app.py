@@ -17,6 +17,12 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+from auth.login import require_login, get_role, get_auth_mode
+current_user = require_login()
+current_role = get_role(current_user)
+st.session_state["current_user"] = current_user
+st.session_state["current_role"] = current_role
+
 # ── Shared styles ────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
@@ -73,6 +79,18 @@ for k, v in DEFAULTS.items():
 
 # ── Sidebar — org context ─────────────────────────────────────────────────────
 with st.sidebar:
+    st.caption(f"Logged in as {current_user} [{current_role}]")
+    if st.button("Logout", key="logout_btn"):
+        if get_auth_mode() == "cloud":
+            st.session_state["force_logout"] = True
+            try:
+                st.logout()
+            except Exception:
+                pass
+        else:
+            st.session_state.pop("local_login_email", None)
+        st.rerun()
+    st.divider()
     st.markdown("## 🏥 HIPAA Readiness Agent")
     st.caption("Security Rule Gap Assessment · BAA Tracking · SOC2 Overlap · Remediation")
     st.divider()

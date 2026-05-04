@@ -1,0 +1,7 @@
+{
+  "default_role": "viewer",
+  "users": {
+    "cyrillical@gmail.com": "admin",
+    "demo@hipaa.example": "viewer"
+  }
+}

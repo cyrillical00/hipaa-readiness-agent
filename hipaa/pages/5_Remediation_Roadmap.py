@@ -12,10 +12,15 @@ from engine.soc2_crosswalk import load_crosswalk, compute_overlap
 from engine.baa_engine import baa_summary as compute_baa_summary, enrich_baa_list
 from engine.control_mapper import load_controls
 from engine.validator import validate_roadmap
+from engine.spend_quota import QuotaExceededError
 from data.sample_assessment import DEMO_ORG_CONTEXT
 from data.sample_baas import DEMO_BAAS
 from utils.csv_exporter import export_roadmap_csv
 from ui.cost_panel import render_cost_panel
+from auth.login import require_login, get_current_user_or_none
+from storage.github_jsonl import append_record
+from uuid import uuid4
+require_login()
 
 st.set_page_config(page_title="Remediation Roadmap — HIPAA Agent", layout="wide")
 st.markdown("# Remediation Roadmap")
@@ -124,8 +129,24 @@ if gen_clicked:
                 st.session_state.roadmap_validation = validate_roadmap(
                     roadmap, critical_gaps, high_gaps, controls
                 )
+                save_user = get_current_user_or_none()
+                if save_user:
+                    try:
+                        items_total = sum(
+                            len(p.get("items", []) or []) for p in roadmap.get("phases", []) or []
+                        )
+                        append_record(save_user, "roadmap_state", {
+                            "roadmap_id": str(uuid4()),
+                            "items_total": items_total,
+                            "items_complete": 0,
+                        })
+                    except Exception as snap_err:
+                        st.caption(f"Roadmap snapshot skipped: {snap_err}")
                 progress_placeholder.empty()
                 st.rerun()
+            except QuotaExceededError as qe:
+                progress_placeholder.empty()
+                st.error(f"Daily spend quota exceeded: {qe}")
             except Exception as e:
                 progress_placeholder.empty()
                 st.error(f"Roadmap generation failed: {e}")

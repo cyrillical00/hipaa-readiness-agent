@@ -13,6 +13,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from engine.baa_engine import enrich_baa_list, baa_summary, RISK_COLORS
 from data.sample_baas import DEMO_BAAS
 from utils.csv_exporter import export_baa_csv
+from auth.login import require_login
+require_login()
 
 st.set_page_config(page_title="BAA Tracker — HIPAA Agent", layout="wide")
 st.markdown("# Business Associate Agreement Tracker")
