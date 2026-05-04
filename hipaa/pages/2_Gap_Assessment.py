@@ -453,7 +453,7 @@ if st.session_state.get("assessment_run") and st.session_state.get("readiness_re
     st.divider()
     st.markdown("### Export Assessment")
     from utils.csv_exporter import export_assessment_csv
-    from utils.pdf_exporter import generate_assessment_pdf
+    from utils.docx_exporter import generate_assessment_docx, docx_to_pdf_bytes
     from engine.baa_engine import baa_summary as compute_baa_summary
 
     baa_list = st.session_state.get("baa_list") or []
@@ -465,8 +465,9 @@ if st.session_state.get("assessment_run") and st.session_state.get("readiness_re
         "ephi_systems": st.session_state.get("ephi_systems", []),
         "soc2_status": st.session_state.get("soc2_status", "None"),
     }
+    safe_name = org_ctx["org_name"].replace(" ", "_")
 
-    col_csv, col_pdf = st.columns(2)
+    col_csv, col_docx = st.columns(2)
     with col_csv:
         csv_data = export_assessment_csv(r, controls, org_ctx["org_name"])
         st.download_button(
@@ -475,17 +476,43 @@ if st.session_state.get("assessment_run") and st.session_state.get("readiness_re
             file_name=f"hipaa_assessment_{org_ctx['org_name'].lower().replace(' ', '_')}.csv",
             mime="text/csv",
         )
-    with col_pdf:
-        try:
-            pdf_data = generate_assessment_pdf(org_ctx, r, controls, baa_sum, st.session_state.get("claude_analysis"))
+    with col_docx:
+        if st.button("Build assessment document", type="secondary"):
+            with st.spinner("Building document..."):
+                try:
+                    docx_bytes = generate_assessment_docx(
+                        org_ctx, r, controls, baa_sum,
+                        st.session_state.get("claude_analysis"),
+                    )
+                    st.session_state["assessment_docx_bytes"] = docx_bytes
+                    st.session_state["assessment_docx_name"] = safe_name
+                    st.session_state["assessment_pdf_bytes"] = docx_to_pdf_bytes(docx_bytes)
+                except Exception as e:
+                    st.warning(f"Document export failed: {e}")
+
+        if st.session_state.get("assessment_docx_bytes"):
+            dn = st.session_state.get("assessment_docx_name", safe_name)
             st.download_button(
-                "Download PDF Report",
-                data=pdf_data,
-                file_name=f"hipaa_report_{org_ctx['org_name'].lower().replace(' ', '_')}.pdf",
-                mime="application/pdf",
+                "Download .docx",
+                data=st.session_state["assessment_docx_bytes"],
+                file_name=f"hipaa_assessment_{dn}.docx",
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                key="dl_assessment_docx",
             )
-        except Exception as e:
-            st.warning(f"PDF export unavailable: {e}")
+            pdf_bytes = st.session_state.get("assessment_pdf_bytes")
+            if pdf_bytes:
+                st.download_button(
+                    "Download .pdf",
+                    data=pdf_bytes,
+                    file_name=f"hipaa_assessment_{dn}.pdf",
+                    mime="application/pdf",
+                    key="dl_assessment_pdf",
+                )
+            else:
+                st.caption(
+                    "PDF conversion unavailable on this host (LibreOffice not detected). "
+                    "The .docx opens cleanly in Word, Pages, or Google Docs."
+                )
 
 else:
     # No assessment run yet

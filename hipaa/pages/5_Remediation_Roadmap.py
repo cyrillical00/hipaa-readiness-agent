@@ -393,6 +393,7 @@ if roadmap:
     # ── Export ────────────────────────────────────────────────────────────────
     st.divider()
     st.markdown("### Export Roadmap")
+    from utils.docx_exporter import generate_roadmap_docx, docx_to_pdf_bytes
     col_e1, col_e2 = st.columns(2)
     with col_e1:
         csv_data = export_roadmap_csv(roadmap)
@@ -404,6 +405,37 @@ if roadmap:
             mime="text/csv",
         )
     with col_e2:
+        safe_org = org_context.get("org_name", "org").replace(" ", "_")
+        try:
+            roadmap_docx = generate_roadmap_docx(
+                org_context=org_context,
+                roadmap=st.session_state.roadmap,
+                controls=controls,
+                refine_meta=st.session_state.get("roadmap_refine"),
+            )
+            st.download_button(
+                "Download roadmap .docx",
+                data=roadmap_docx,
+                file_name=f"hipaa_roadmap_{safe_org}.docx",
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                key="dl_roadmap_docx",
+            )
+            roadmap_pdf = docx_to_pdf_bytes(roadmap_docx)
+            if roadmap_pdf:
+                st.download_button(
+                    "Download roadmap .pdf",
+                    data=roadmap_pdf,
+                    file_name=f"hipaa_roadmap_{safe_org}.pdf",
+                    mime="application/pdf",
+                    key="dl_roadmap_pdf",
+                )
+            else:
+                st.caption(
+                    "PDF conversion unavailable on this host (LibreOffice not detected). "
+                    "The .docx opens cleanly in Word, Pages, or Google Docs."
+                )
+        except Exception as docx_err:
+            st.warning(f"Roadmap document export unavailable: {docx_err}")
         st.caption(
             "CSV includes Summary, Description, Priority, Estimate, Labels, and Phase, "
             "ready to import directly into Jira as a project sprint."
