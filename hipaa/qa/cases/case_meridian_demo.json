@@ -52,7 +52,15 @@
     "TEC-004": {"status": "Implemented", "evidence": true, "notes": "S3 SSE-AES256 plus RDS encryption with AWS KMS."},
     "TEC-006": {"status": "Partial", "evidence": false, "notes": "Database checksums on, no formal integrity verification for ePHI exports."},
     "TEC-008": {"status": "Implemented", "evidence": true, "notes": "TLS 1.2 plus enforced on all API endpoints."},
-    "TEC-009": {"status": "Partial", "evidence": false, "notes": "APIs use TLS; opportunistic TLS not confirmed for Google Workspace email."}
+    "TEC-009": {"status": "Partial", "evidence": false, "notes": "APIs use TLS; opportunistic TLS not confirmed for Google Workspace email."},
+    "PRV-001": {"status": "Not Implemented", "evidence": false, "notes": "No Notice of Privacy Practices documented."},
+    "PRV-005": {"status": "N/A (Documented)", "evidence": true, "notes": "Privacy obligations flow through Covered Entity contracts; documented in BAA."},
+    "PRV-007": {"status": "Partial", "evidence": false, "notes": "Role based access via Okta; no formal minimum necessary policy."},
+    "PRV-012": {"status": "Not Implemented", "evidence": false, "notes": "No designated Privacy Officer; informal coverage by Security Officer."},
+    "PRV-013": {"status": "Partial", "evidence": false, "notes": "Onboarding mentions HIPAA briefly; no Privacy Rule curriculum."},
+    "BRN-001": {"status": "Partial", "evidence": false, "notes": "Triage exists; no four factor breach risk assessment template."},
+    "BRN-005": {"status": "Partial", "evidence": false, "notes": "BAAs reference 60 day notice; no internal procedure or template for BA to CE notification."},
+    "BRN-007": {"status": "Not Implemented", "evidence": false, "notes": "No standalone breach response plan; relies on generic SOC2 plan."}
   },
   "connector_findings": {
     "okta": {"mfa_enforced": true, "unique_user_ids": true, "auto_logoff_minutes": 15, "password_policy_strong": true, "audit_log_retention_days": 90, "active_user_count": 148, "admin_group_count": 3, "inactive_users_count": 4, "device_trust_enabled": false},
@@ -82,13 +90,13 @@
   "overlap_analysis": {"coverage_pct": 42.0, "full_overlap": 5, "partial_overlap": 12, "no_overlap": 25},
   "expected_score_shape": {
     "must_have_keys": ["gap_summary", "overall_risk_tier", "critical_gaps", "high_gaps", "quick_wins", "audit_exposure", "positive_findings"],
-    "min_critical_gaps": 3,
+    "min_critical_gaps": 5,
     "risk_tier_in": ["CRITICAL", "HIGH"]
   },
   "expected_roadmap_shape": {
     "must_have_keys": ["executive_summary", "overall_risk_tier", "phases", "quick_wins"],
     "phases_count": 3,
-    "min_items_per_phase": 5,
-    "must_address_control_ids": ["ADM-022"]
+    "min_items_per_phase": 6,
+    "must_address_control_ids": ["ADM-022", "PRV-012", "BRN-005", "BRN-007"]
   }
 }

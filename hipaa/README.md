@@ -82,6 +82,8 @@ Addressable controls:
 
 Readiness bands: **Not Ready** (0–49%) · **Partial** (50–74%) · **Nearing Ready** (75–89%) · **Ready** (90–100%)
 
+Controls are weighted by ePHI relevance when computing the overall and per-category scores: high-risk controls for the org's ePHI systems carry a 2.0 multiplier, controls tied to the org's relevant connectors carry 1.5, physical-safeguard controls that don't apply (cloud-only org, no on-prem) drop to 0.5, and everything else stays at 1.0. When a user is logged in, the per-control evidence flag also reads from the per-control evidence vault (any uploaded artifact counts as evidence) so the connector signal is no longer the only source of truth.
+
 ## Deploy to Streamlit Community Cloud
 
 1. Fork this repo
