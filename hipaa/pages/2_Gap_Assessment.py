@@ -1,5 +1,5 @@
 """
-Tab 2 — Gap Assessment
+Tab 2: Gap Assessment
 3 safeguard categories, Required vs Addressable, per-control scoring.
 Claude call #1 on "Run Assessment".
 """
@@ -15,10 +15,18 @@ from engine.roadmap_generator import score_assessment_with_claude
 from data.sample_assessment import DEMO_CONTROL_STATUSES, DEMO_ORG_CONTEXT
 from auth.login import require_login, get_current_user_or_none
 from storage.github_jsonl import append_record
+from storage.evidence import (
+    upload_file,
+    add_url,
+    list_evidence,
+    get_evidence_bytes,
+    delete_evidence,
+)
 from engine.audit import log_action
 require_login()
+current_user = get_current_user_or_none()
 
-st.set_page_config(page_title="Gap Assessment — HIPAA Agent", layout="wide")
+st.set_page_config(page_title="Gap Assessment · HIPAA Agent", layout="wide")
 st.markdown("# Gap Assessment")
 st.caption("HIPAA Security Rule · 42 controls · Administrative · Physical · Technical")
 
@@ -138,7 +146,7 @@ if st.session_state.get("assessment_run") and st.session_state.get("readiness_re
         mode="gauge+number+delta",
         value=score,
         number={"suffix": "%", "font": {"size": 36, "color": band_color}},
-        title={"text": f"Overall HIPAA Readiness — {band}", "font": {"size": 16, "color": "#E2E8F0"}},
+        title={"text": f"Overall HIPAA Readiness · {band}", "font": {"size": 16, "color": "#E2E8F0"}},
         gauge={
             "axis": {"range": [0, 100], "tickfont": {"color": "#E2E8F0"}},
             "bar": {"color": band_color, "thickness": 0.25},
@@ -169,7 +177,7 @@ if st.session_state.get("assessment_run") and st.session_state.get("readiness_re
             cat_band, cat_color = get_readiness_band(cat_score)
             col_label, col_bar = st.columns([1, 3])
             col_label.markdown(f"**{cat}**")
-            col_bar.progress(int(cat_score), text=f"{cat_score:.1f}% — {cat_band}")
+            col_bar.progress(int(cat_score), text=f"{cat_score:.1f}% · {cat_band}")
 
         st.markdown("#### Control Summary")
         mc1, mc2, mc3, mc4 = st.columns(4)
@@ -187,7 +195,7 @@ if st.session_state.get("assessment_run") and st.session_state.get("readiness_re
         st.markdown(
             f"<div style='background:#12121A;border-left:4px solid {risk_color};"
             f"padding:12px 16px;border-radius:4px;margin-bottom:8px'>"
-            f"<strong style='color:{risk_color}'>Risk Tier: {risk_tier}</strong> — "
+            f"<strong style='color:{risk_color}'>Risk Tier: {risk_tier}</strong> · "
             f"{claude.get('gap_summary', '')}</div>",
             unsafe_allow_html=True
         )
@@ -209,7 +217,7 @@ if st.session_state.get("assessment_run") and st.session_state.get("readiness_re
                     st.markdown(
                         f"<div style='background:#450a0a;border:1px solid #DC2626;"
                         f"padding:10px;border-radius:6px;margin-bottom:6px'>"
-                        f"<strong style='color:#DC2626'>{g['control_id']}</strong> — "
+                        f"<strong style='color:#DC2626'>{g['control_id']}</strong> · "
                         f"{c.get('spec', '')} [{c.get('standard', '')}]<br>"
                         f"<span style='color:#fca5a5;font-size:12px'>{g.get('reason', '')}</span><br>"
                         f"<em style='color:#f87171;font-size:11px'>Action: {g.get('immediate_action', '')}</em>"
@@ -224,7 +232,7 @@ if st.session_state.get("assessment_run") and st.session_state.get("readiness_re
                     st.markdown(
                         f"<div style='background:#052e16;border:1px solid #22C55E;"
                         f"padding:10px;border-radius:6px;margin-bottom:6px'>"
-                        f"<strong style='color:#22C55E'>{w['control_id']}</strong> — "
+                        f"<strong style='color:#22C55E'>{w['control_id']}</strong> · "
                         f"{c.get('spec', '')}<br>"
                         f"<span style='color:#86efac;font-size:12px'>{w.get('action', '')}</span><br>"
                         f"<em style='color:#6ee7b7;font-size:11px'>Effort: ~{w.get('effort_days', '?')} day(s)</em>"
@@ -248,7 +256,7 @@ if st.session_state.get("assessment_run") and st.session_state.get("readiness_re
         addressable_count = len([c for c in cat_controls if c["status"] == "Addressable"])
 
         with st.expander(
-            f"**{safeguard} Safeguards** — {cat_score:.1f}% {cat_band} "
+            f"**{safeguard} Safeguards** · {cat_score:.1f}% {cat_band} "
             f"({required_count} Required · {addressable_count} Addressable)",
             expanded=(safeguard == "Administrative"),
         ):
@@ -271,7 +279,9 @@ if st.session_state.get("assessment_run") and st.session_state.get("readiness_re
                 gap_color = GAP_LABEL_COLORS.get(gap_tier, "#6B7280")
                 ctrl_score = result.get("score", 0)
                 current_status = result.get("status", "Not Implemented")
-                evidence = result.get("evidence", False)
+                raw_evidence = result.get("evidence", False)
+                user_evidence_items = list_evidence(current_user, control_id=ctrl_id) if current_user else []
+                evidence = bool(user_evidence_items) if current_user and user_evidence_items else raw_evidence
                 notes = result.get("notes", "")
 
                 with st.container():
@@ -297,6 +307,10 @@ if st.session_state.get("assessment_run") and st.session_state.get("readiness_re
                         unsafe_allow_html=True
                     )
 
+                    citation = ctrl.get("cfr_citation", "")
+                    if citation:
+                        st.caption(citation)
+
                     if notes:
                         st.markdown(
                             f"<div style='background:#12121A;color:#94a3b8;font-size:12px;"
@@ -304,8 +318,79 @@ if st.session_state.get("assessment_run") and st.session_state.get("readiness_re
                             unsafe_allow_html=True
                         )
 
-                    # Manual override
-                    with st.expander(f"Override — {ctrl_id}", expanded=False):
+                    with st.expander("Evidence", expanded=False):
+                        if current_user is None:
+                            st.info("Log in to attach evidence.")
+                        else:
+                            items = list_evidence(current_user, control_id=ctrl_id)
+                            if items:
+                                for ev in items:
+                                    cols = st.columns([4, 2, 1])
+                                    cols[0].markdown(
+                                        f"**{ev['filename']}**  ·  {ev.get('caption', '')}"
+                                    )
+                                    cols[1].caption(ev.get("_ts", ""))
+                                    if cols[2].button("Delete", key=f"del_{ev['evidence_id']}"):
+                                        delete_evidence(current_user, ev["evidence_id"])
+                                        st.rerun()
+                                    if ev.get("kind") == "url":
+                                        st.link_button("Open URL", ev.get("url", ""))
+                                    else:
+                                        evidence_bytes_tuple = get_evidence_bytes(
+                                            current_user, ev["evidence_id"]
+                                        )
+                                        if evidence_bytes_tuple:
+                                            bytes_, fname, ctype = evidence_bytes_tuple
+                                            st.download_button(
+                                                "Download",
+                                                bytes_,
+                                                file_name=fname,
+                                                mime=ctype or "application/octet-stream",
+                                                key=f"dl_{ev['evidence_id']}",
+                                            )
+                            else:
+                                st.caption("No evidence attached yet.")
+
+                            upload_kind = st.radio(
+                                "Add evidence as",
+                                ["File upload", "URL reference"],
+                                key=f"kind_{ctrl_id}",
+                                horizontal=True,
+                            )
+                            caption_val = st.text_input(
+                                "Caption (optional)", key=f"cap_{ctrl_id}"
+                            )
+                            if upload_kind == "File upload":
+                                f = st.file_uploader(
+                                    "PDF, PNG, JPG, CSV, TXT (max 10 MB)",
+                                    type=["pdf", "png", "jpg", "jpeg", "csv", "txt"],
+                                    key=f"up_{ctrl_id}",
+                                )
+                                if f and st.button("Save file", key=f"save_ev_{ctrl_id}"):
+                                    try:
+                                        upload_file(
+                                            current_user,
+                                            ctrl_id,
+                                            f.name,
+                                            f.read(),
+                                            caption_val,
+                                            f.type,
+                                        )
+                                        st.success("Saved.")
+                                        st.rerun()
+                                    except ValueError as e:
+                                        st.error(str(e))
+                            else:
+                                url_val = st.text_input("URL", key=f"url_{ctrl_id}")
+                                if url_val and st.button("Save URL", key=f"save_url_{ctrl_id}"):
+                                    try:
+                                        add_url(current_user, ctrl_id, url_val, caption_val)
+                                        st.success("Saved.")
+                                        st.rerun()
+                                    except ValueError as e:
+                                        st.error(str(e))
+
+                    with st.expander(f"Override · {ctrl_id}", expanded=False):
                         col_s, col_e, col_a = st.columns(3)
                         status_options = ["Implemented", "Partial", "Not Implemented", "N/A (Documented)"]
                         new_status = col_s.selectbox(
@@ -335,7 +420,7 @@ if st.session_state.get("assessment_run") and st.session_state.get("readiness_re
                                 "alt_documented": new_alt,
                                 "notes": new_notes,
                             }
-                            st.success("Saved — click 'Run Assessment' to recalculate.")
+                            st.success("Saved. Click 'Run Assessment' to recalculate.")
 
                     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -412,11 +497,14 @@ else:
         cat_controls = [c for c in controls if c["safeguard"] == safeguard]
         req = len([c for c in cat_controls if c["status"] == "Required"])
         addr = len([c for c in cat_controls if c["status"] == "Addressable"])
-        with st.expander(f"**{safeguard}** — {len(cat_controls)} controls ({req} Required · {addr} Addressable)"):
+        with st.expander(f"**{safeguard}** · {len(cat_controls)} controls ({req} Required · {addr} Addressable)"):
             for ctrl in cat_controls:
                 st.markdown(
                     f"**{ctrl['id']}** {spec_badge(ctrl['status'])} "
-                    f"— {ctrl['standard']} / **{ctrl['spec']}**",
+                    f"· {ctrl['standard']} / **{ctrl['spec']}**",
                     unsafe_allow_html=True
                 )
+                preview_citation = ctrl.get("cfr_citation", "")
+                if preview_citation:
+                    st.caption(preview_citation)
                 st.caption(ctrl["description"])

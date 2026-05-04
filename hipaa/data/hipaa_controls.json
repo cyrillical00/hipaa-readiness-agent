@@ -10,7 +10,8 @@
     "connector_signals": ["jira", "confluence", "manual"],
     "soc2_overlap": ["CC3.2", "CC9.1"],
     "remediation_effort": "High",
-    "remediation_impact": "Critical"
+    "remediation_impact": "Critical",
+    "cfr_citation": "45 CFR §164.308(a)(1)(ii)(A)"
   },
   {
     "id": "ADM-002",
@@ -23,7 +24,8 @@
     "connector_signals": ["jira", "confluence", "manual"],
     "soc2_overlap": ["CC9.1", "CC9.2"],
     "remediation_effort": "High",
-    "remediation_impact": "Critical"
+    "remediation_impact": "Critical",
+    "cfr_citation": "45 CFR §164.308(a)(1)(ii)(B)"
   },
   {
     "id": "ADM-003",
@@ -36,7 +38,8 @@
     "connector_signals": ["confluence", "manual"],
     "soc2_overlap": ["CC1.4"],
     "remediation_effort": "Low",
-    "remediation_impact": "Medium"
+    "remediation_impact": "Medium",
+    "cfr_citation": "45 CFR §164.308(a)(1)(ii)(C)"
   },
   {
     "id": "ADM-004",
@@ -49,7 +52,8 @@
     "connector_signals": ["aws", "gcp", "azure", "okta"],
     "soc2_overlap": ["CC7.2"],
     "remediation_effort": "Medium",
-    "remediation_impact": "High"
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.308(a)(1)(ii)(D)"
   },
   {
     "id": "ADM-005",
@@ -62,7 +66,8 @@
     "connector_signals": ["confluence", "manual"],
     "soc2_overlap": ["CC1.3"],
     "remediation_effort": "Low",
-    "remediation_impact": "High"
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.308(a)(2)"
   },
   {
     "id": "ADM-006",
@@ -75,7 +80,8 @@
     "connector_signals": ["okta", "confluence"],
     "soc2_overlap": ["CC6.3"],
     "remediation_effort": "Medium",
-    "remediation_impact": "Medium"
+    "remediation_impact": "Medium",
+    "cfr_citation": "45 CFR §164.308(a)(3)(ii)(A)"
   },
   {
     "id": "ADM-007",
@@ -88,7 +94,8 @@
     "connector_signals": ["okta", "confluence"],
     "soc2_overlap": ["CC1.4"],
     "remediation_effort": "Low",
-    "remediation_impact": "Medium"
+    "remediation_impact": "Medium",
+    "cfr_citation": "45 CFR §164.308(a)(3)(ii)(B)"
   },
   {
     "id": "ADM-008",
@@ -101,7 +108,8 @@
     "connector_signals": ["okta", "jira"],
     "soc2_overlap": ["CC6.2"],
     "remediation_effort": "Low",
-    "remediation_impact": "High"
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.308(a)(3)(ii)(C)"
   },
   {
     "id": "ADM-009",
@@ -114,7 +122,8 @@
     "connector_signals": ["okta", "jira"],
     "soc2_overlap": ["CC6.1"],
     "remediation_effort": "Medium",
-    "remediation_impact": "High"
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.308(a)(4)(ii)(B)"
   },
   {
     "id": "ADM-010",
@@ -127,7 +136,8 @@
     "connector_signals": ["okta", "github"],
     "soc2_overlap": ["CC6.1", "CC6.3"],
     "remediation_effort": "Medium",
-    "remediation_impact": "High"
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.308(a)(4)(ii)(C)"
   },
   {
     "id": "ADM-011",
@@ -140,7 +150,8 @@
     "connector_signals": ["confluence", "manual"],
     "soc2_overlap": ["CC2.2"],
     "remediation_effort": "Low",
-    "remediation_impact": "Medium"
+    "remediation_impact": "Medium",
+    "cfr_citation": "45 CFR §164.308(a)(5)(ii)(A)"
   },
   {
     "id": "ADM-012",
@@ -153,7 +164,8 @@
     "connector_signals": ["jamf", "intune", "kandji"],
     "soc2_overlap": ["CC6.8"],
     "remediation_effort": "Low",
-    "remediation_impact": "High"
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.308(a)(5)(ii)(B)"
   },
   {
     "id": "ADM-013",
@@ -166,7 +178,8 @@
     "connector_signals": ["okta", "aws", "gcp", "azure"],
     "soc2_overlap": ["CC7.2"],
     "remediation_effort": "Low",
-    "remediation_impact": "High"
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.308(a)(5)(ii)(C)"
   },
   {
     "id": "ADM-014",
@@ -179,7 +192,8 @@
     "connector_signals": ["okta"],
     "soc2_overlap": ["CC6.1"],
     "remediation_effort": "Low",
-    "remediation_impact": "High"
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.308(a)(5)(ii)(D)"
   },
   {
     "id": "ADM-015",
@@ -192,7 +206,8 @@
     "connector_signals": ["jira", "slack"],
     "soc2_overlap": ["CC7.3", "CC7.4"],
     "remediation_effort": "High",
-    "remediation_impact": "Critical"
+    "remediation_impact": "Critical",
+    "cfr_citation": "45 CFR §164.308(a)(6)(ii)"
   },
   {
     "id": "ADM-016",
@@ -205,7 +220,8 @@
     "connector_signals": ["aws", "gcp", "azure"],
     "soc2_overlap": ["A1.2"],
     "remediation_effort": "Medium",
-    "remediation_impact": "Critical"
+    "remediation_impact": "Critical",
+    "cfr_citation": "45 CFR §164.308(a)(7)(ii)(A)"
   },
   {
     "id": "ADM-017",
@@ -218,7 +234,8 @@
     "connector_signals": ["aws", "gcp", "azure", "confluence"],
     "soc2_overlap": ["A1.2", "A1.3"],
     "remediation_effort": "High",
-    "remediation_impact": "Critical"
+    "remediation_impact": "Critical",
+    "cfr_citation": "45 CFR §164.308(a)(7)(ii)(B)"
   },
   {
     "id": "ADM-018",
@@ -231,7 +248,8 @@
     "connector_signals": ["confluence", "manual"],
     "soc2_overlap": ["A1.3"],
     "remediation_effort": "Medium",
-    "remediation_impact": "High"
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.308(a)(7)(ii)(C)"
   },
   {
     "id": "ADM-019",
@@ -244,7 +262,8 @@
     "connector_signals": ["jira", "confluence"],
     "soc2_overlap": ["A1.3"],
     "remediation_effort": "Medium",
-    "remediation_impact": "High"
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.308(a)(7)(ii)(D)"
   },
   {
     "id": "ADM-020",
@@ -257,7 +276,8 @@
     "connector_signals": ["confluence", "manual"],
     "soc2_overlap": ["CC9.1"],
     "remediation_effort": "Medium",
-    "remediation_impact": "Medium"
+    "remediation_impact": "Medium",
+    "cfr_citation": "45 CFR §164.308(a)(7)(ii)(E)"
   },
   {
     "id": "ADM-021",
@@ -270,7 +290,8 @@
     "connector_signals": ["confluence", "manual"],
     "soc2_overlap": ["CC4.1", "CC4.2"],
     "remediation_effort": "High",
-    "remediation_impact": "High"
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.308(a)(8)"
   },
   {
     "id": "ADM-022",
@@ -283,7 +304,8 @@
     "connector_signals": ["manual"],
     "soc2_overlap": [],
     "remediation_effort": "High",
-    "remediation_impact": "Critical"
+    "remediation_impact": "Critical",
+    "cfr_citation": "45 CFR §164.308(b)(1)"
   },
   {
     "id": "ADM-023",
@@ -296,7 +318,106 @@
     "connector_signals": ["confluence", "manual"],
     "soc2_overlap": ["CC2.2"],
     "remediation_effort": "Medium",
-    "remediation_impact": "High"
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.308(a)(5)(i)"
+  },
+  {
+    "id": "BRN-001",
+    "safeguard": "Breach Notification",
+    "standard": "Breach Risk Assessment",
+    "spec": "Four Factor Risk Assessment",
+    "status": "Required",
+    "description": "Perform and document a four factor risk assessment for any acquisition, access, use, or disclosure of unsecured PHI to determine probability that PHI has been compromised and whether breach notification is required.",
+    "evidence_types": ["risk_assessment_template", "completed_assessments", "decision_log"],
+    "connector_signals": ["confluence", "manual", "jira"],
+    "soc2_overlap": ["CC7.4"],
+    "remediation_effort": "Medium",
+    "remediation_impact": "Critical",
+    "cfr_citation": "45 CFR §164.402"
+  },
+  {
+    "id": "BRN-002",
+    "safeguard": "Breach Notification",
+    "standard": "Notification to Individuals",
+    "spec": "Individual Notice Within 60 Days",
+    "status": "Required",
+    "description": "Notify each affected individual of a breach of unsecured PHI without unreasonable delay and no later than 60 calendar days after discovery. Notice must include description, types of PHI involved, steps individuals should take, and contact information.",
+    "evidence_types": ["notification_template", "notification_log", "delivery_records"],
+    "connector_signals": ["confluence", "manual"],
+    "soc2_overlap": [],
+    "remediation_effort": "Medium",
+    "remediation_impact": "Critical",
+    "cfr_citation": "45 CFR §164.404"
+  },
+  {
+    "id": "BRN-003",
+    "safeguard": "Breach Notification",
+    "standard": "Notification to Media",
+    "spec": "Media Notice for Breaches Affecting 500 or More",
+    "status": "Required",
+    "description": "For breaches affecting more than 500 residents of a state or jurisdiction, notify prominent media outlets serving the affected area without unreasonable delay and no later than 60 calendar days after discovery.",
+    "evidence_types": ["media_notification_procedure", "press_release_template"],
+    "connector_signals": ["confluence", "manual"],
+    "soc2_overlap": [],
+    "remediation_effort": "Low",
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.406"
+  },
+  {
+    "id": "BRN-004",
+    "safeguard": "Breach Notification",
+    "standard": "Notification to Secretary",
+    "spec": "HHS Notification Requirements",
+    "status": "Required",
+    "description": "Notify the Secretary of HHS of breaches. Breaches affecting 500 or more individuals must be reported without unreasonable delay and no later than 60 days after discovery; smaller breaches reported in an annual log.",
+    "evidence_types": ["hhs_submission_records", "annual_breach_log", "submission_procedure"],
+    "connector_signals": ["confluence", "manual"],
+    "soc2_overlap": [],
+    "remediation_effort": "Low",
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.408"
+  },
+  {
+    "id": "BRN-005",
+    "safeguard": "Breach Notification",
+    "standard": "Business Associate Notification",
+    "spec": "BA Notice to Covered Entity",
+    "status": "Required",
+    "description": "A business associate must notify the covered entity of any breach of unsecured PHI without unreasonable delay and no later than 60 calendar days after discovery. Notice must identify each affected individual and provide information needed for the covered entity to fulfill its obligations.",
+    "evidence_types": ["ba_notification_procedure", "ba_notification_template", "ce_notification_log"],
+    "connector_signals": ["confluence", "manual", "jira"],
+    "soc2_overlap": ["CC9.2"],
+    "remediation_effort": "Medium",
+    "remediation_impact": "Critical",
+    "cfr_citation": "45 CFR §164.410"
+  },
+  {
+    "id": "BRN-006",
+    "safeguard": "Breach Notification",
+    "standard": "Administrative Requirements",
+    "spec": "Documentation of Breach Decisions",
+    "status": "Required",
+    "description": "Maintain documentation of all breach risk assessments, notification decisions, and the basis for any determination that an impermissible use or disclosure did not constitute a reportable breach. Retain documentation for at least six years.",
+    "evidence_types": ["breach_decision_log", "retention_policy", "documentation_repository"],
+    "connector_signals": ["confluence", "manual", "jira"],
+    "soc2_overlap": ["CC7.4"],
+    "remediation_effort": "Low",
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.414(b)"
+  },
+  {
+    "id": "BRN-007",
+    "safeguard": "Breach Notification",
+    "standard": "Operational Readiness",
+    "spec": "Breach Response Plan",
+    "status": "Required",
+    "description": "Maintain an operational breach response plan that defines roles, escalation paths, decision criteria, notification owners, and timelines so that the workforce can execute the four factor assessment and the notifications required by the Breach Notification Rule.",
+    "evidence_types": ["breach_response_plan", "tabletop_exercise_records", "role_assignment_doc"],
+    "connector_signals": ["confluence", "manual", "jira"],
+    "soc2_overlap": ["CC7.5"],
+    "remediation_effort": "High",
+    "remediation_impact": "Critical",
+    "cfr_citation": "45 CFR §164.404, §164.408 (operational)"
   },
   {
     "id": "PHY-001",
@@ -309,7 +430,8 @@
     "connector_signals": ["manual"],
     "soc2_overlap": ["CC6.4"],
     "remediation_effort": "Low",
-    "remediation_impact": "Medium"
+    "remediation_impact": "Medium",
+    "cfr_citation": "45 CFR §164.310(a)(2)(i)"
   },
   {
     "id": "PHY-002",
@@ -322,7 +444,8 @@
     "connector_signals": ["manual"],
     "soc2_overlap": ["CC6.4"],
     "remediation_effort": "Medium",
-    "remediation_impact": "Medium"
+    "remediation_impact": "Medium",
+    "cfr_citation": "45 CFR §164.310(a)(2)(ii)"
   },
   {
     "id": "PHY-003",
@@ -335,7 +458,8 @@
     "connector_signals": ["manual"],
     "soc2_overlap": ["CC6.4"],
     "remediation_effort": "Medium",
-    "remediation_impact": "Medium"
+    "remediation_impact": "Medium",
+    "cfr_citation": "45 CFR §164.310(a)(2)(iii)"
   },
   {
     "id": "PHY-004",
@@ -348,7 +472,8 @@
     "connector_signals": ["jira", "manual"],
     "soc2_overlap": [],
     "remediation_effort": "Low",
-    "remediation_impact": "Low"
+    "remediation_impact": "Low",
+    "cfr_citation": "45 CFR §164.310(a)(2)(iv)"
   },
   {
     "id": "PHY-005",
@@ -361,7 +486,8 @@
     "connector_signals": ["jamf", "intune", "kandji"],
     "soc2_overlap": ["CC6.7"],
     "remediation_effort": "Low",
-    "remediation_impact": "Medium"
+    "remediation_impact": "Medium",
+    "cfr_citation": "45 CFR §164.310(b)"
   },
   {
     "id": "PHY-006",
@@ -374,7 +500,8 @@
     "connector_signals": ["jamf", "intune", "kandji"],
     "soc2_overlap": ["CC6.7"],
     "remediation_effort": "Low",
-    "remediation_impact": "High"
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.310(c)"
   },
   {
     "id": "PHY-007",
@@ -387,7 +514,8 @@
     "connector_signals": ["jamf", "intune", "manual"],
     "soc2_overlap": ["CC6.5"],
     "remediation_effort": "Low",
-    "remediation_impact": "High"
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.310(d)(2)(i)"
   },
   {
     "id": "PHY-008",
@@ -400,7 +528,8 @@
     "connector_signals": ["manual"],
     "soc2_overlap": ["CC6.5"],
     "remediation_effort": "Low",
-    "remediation_impact": "Medium"
+    "remediation_impact": "Medium",
+    "cfr_citation": "45 CFR §164.310(d)(2)(ii)"
   },
   {
     "id": "PHY-009",
@@ -413,7 +542,8 @@
     "connector_signals": ["jamf", "intune", "kandji"],
     "soc2_overlap": [],
     "remediation_effort": "Medium",
-    "remediation_impact": "Medium"
+    "remediation_impact": "Medium",
+    "cfr_citation": "45 CFR §164.310(d)(2)(iii)"
   },
   {
     "id": "PHY-010",
@@ -426,7 +556,190 @@
     "connector_signals": ["aws", "gcp", "azure"],
     "soc2_overlap": ["A1.2"],
     "remediation_effort": "Low",
-    "remediation_impact": "Medium"
+    "remediation_impact": "Medium",
+    "cfr_citation": "45 CFR §164.310(d)(2)(iv)"
+  },
+  {
+    "id": "PRV-001",
+    "safeguard": "Privacy",
+    "standard": "Notice of Privacy Practices",
+    "spec": "Notice Content and Distribution",
+    "status": "Required",
+    "description": "Provide a Notice of Privacy Practices to individuals describing how PHI may be used and disclosed, the individual's rights, and the covered entity's obligations. Make the notice available on request and post it prominently.",
+    "evidence_types": ["npp_doc", "distribution_log", "website_posting"],
+    "connector_signals": ["confluence", "manual"],
+    "soc2_overlap": [],
+    "remediation_effort": "Medium",
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.520"
+  },
+  {
+    "id": "PRV-002",
+    "safeguard": "Privacy",
+    "standard": "Individual Rights",
+    "spec": "Right to Access PHI",
+    "status": "Required",
+    "description": "Provide individuals with the right to inspect and obtain a copy of their PHI in a designated record set within 30 days of request, in the form and format requested when readily producible.",
+    "evidence_types": ["access_request_procedure", "patient_request_log", "response_time_metrics"],
+    "connector_signals": ["confluence", "manual"],
+    "soc2_overlap": [],
+    "remediation_effort": "Medium",
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.524"
+  },
+  {
+    "id": "PRV-003",
+    "safeguard": "Privacy",
+    "standard": "Individual Rights",
+    "spec": "Right to Amend PHI",
+    "status": "Required",
+    "description": "Allow individuals to request amendment of PHI in a designated record set. Respond within 60 days, accept or deny with documented basis, and propagate accepted amendments to identified persons.",
+    "evidence_types": ["amendment_request_procedure", "patient_request_log", "denial_documentation"],
+    "connector_signals": ["confluence", "manual"],
+    "soc2_overlap": [],
+    "remediation_effort": "Medium",
+    "remediation_impact": "Medium",
+    "cfr_citation": "45 CFR §164.526"
+  },
+  {
+    "id": "PRV-004",
+    "safeguard": "Privacy",
+    "standard": "Individual Rights",
+    "spec": "Right to Accounting of Disclosures",
+    "status": "Required",
+    "description": "Provide individuals with an accounting of disclosures of PHI made in the six years prior to the request, excluding disclosures for treatment, payment, healthcare operations, and other listed exceptions.",
+    "evidence_types": ["disclosure_log", "accounting_procedure", "patient_request_log"],
+    "connector_signals": ["confluence", "manual"],
+    "soc2_overlap": [],
+    "remediation_effort": "High",
+    "remediation_impact": "Medium",
+    "cfr_citation": "45 CFR §164.528"
+  },
+  {
+    "id": "PRV-005",
+    "safeguard": "Privacy",
+    "standard": "Individual Rights",
+    "spec": "Right to Request Restrictions",
+    "status": "Required",
+    "description": "Permit individuals to request restrictions on uses and disclosures of PHI for treatment, payment, or healthcare operations. Honor restrictions on disclosures to a health plan when the individual has paid out of pocket in full.",
+    "evidence_types": ["restriction_request_procedure", "patient_request_log", "system_flag_records"],
+    "connector_signals": ["confluence", "manual"],
+    "soc2_overlap": [],
+    "remediation_effort": "Medium",
+    "remediation_impact": "Medium",
+    "cfr_citation": "45 CFR §164.522(a)"
+  },
+  {
+    "id": "PRV-006",
+    "safeguard": "Privacy",
+    "standard": "Individual Rights",
+    "spec": "Right to Confidential Communications",
+    "status": "Required",
+    "description": "Accommodate reasonable requests by individuals to receive communications of PHI by alternative means or at alternative locations, such as a specific phone number or mailing address.",
+    "evidence_types": ["confidential_comm_procedure", "patient_request_log"],
+    "connector_signals": ["confluence", "manual"],
+    "soc2_overlap": [],
+    "remediation_effort": "Low",
+    "remediation_impact": "Medium",
+    "cfr_citation": "45 CFR §164.522(b)"
+  },
+  {
+    "id": "PRV-007",
+    "safeguard": "Privacy",
+    "standard": "Uses and Disclosures",
+    "spec": "Minimum Necessary Standard",
+    "status": "Required",
+    "description": "Make reasonable efforts to limit uses, disclosures, and requests for PHI to the minimum necessary to accomplish the intended purpose. Implement role based access policies and standard protocols for routine disclosures.",
+    "evidence_types": ["minimum_necessary_policy", "role_based_access_matrix", "training_records"],
+    "connector_signals": ["confluence", "manual", "okta"],
+    "soc2_overlap": ["CC6.1"],
+    "remediation_effort": "Medium",
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.502(b), §164.514(d)"
+  },
+  {
+    "id": "PRV-008",
+    "safeguard": "Privacy",
+    "standard": "Uses and Disclosures",
+    "spec": "Authorization for Uses and Disclosures",
+    "status": "Required",
+    "description": "Obtain a valid written authorization from the individual for uses and disclosures of PHI not otherwise permitted or required by the Privacy Rule. Authorizations must include specific required elements and statements.",
+    "evidence_types": ["authorization_template", "authorization_log", "validity_review_procedure"],
+    "connector_signals": ["confluence", "manual"],
+    "soc2_overlap": [],
+    "remediation_effort": "Medium",
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.508"
+  },
+  {
+    "id": "PRV-009",
+    "safeguard": "Privacy",
+    "standard": "Uses and Disclosures",
+    "spec": "Permitted Uses and Disclosures",
+    "status": "Required",
+    "description": "Restrict uses and disclosures of PHI to those permitted or required by the Privacy Rule, including treatment, payment, healthcare operations, and the listed public interest categories. Document the basis for any non standard disclosure.",
+    "evidence_types": ["uses_disclosures_policy", "disclosure_decision_log"],
+    "connector_signals": ["confluence", "manual"],
+    "soc2_overlap": [],
+    "remediation_effort": "Medium",
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.502, §164.512"
+  },
+  {
+    "id": "PRV-010",
+    "safeguard": "Privacy",
+    "standard": "Uses and Disclosures",
+    "spec": "Marketing Restrictions",
+    "status": "Required",
+    "description": "Obtain authorization before using or disclosing PHI for marketing communications, except for face to face communications and promotional gifts of nominal value. Disclose any financial remuneration in the authorization.",
+    "evidence_types": ["marketing_policy", "authorization_template", "remuneration_disclosure_log"],
+    "connector_signals": ["confluence", "manual"],
+    "soc2_overlap": [],
+    "remediation_effort": "Low",
+    "remediation_impact": "Medium",
+    "cfr_citation": "45 CFR §164.508(a)(3)"
+  },
+  {
+    "id": "PRV-011",
+    "safeguard": "Privacy",
+    "standard": "Uses and Disclosures",
+    "spec": "Sale of PHI",
+    "status": "Required",
+    "description": "Obtain authorization before any sale of PHI, with the authorization stating that the disclosure will result in remuneration to the covered entity. Distinguish sale of PHI from permitted disclosures involving cost based fees.",
+    "evidence_types": ["sale_of_phi_policy", "authorization_template", "transaction_log"],
+    "connector_signals": ["confluence", "manual"],
+    "soc2_overlap": [],
+    "remediation_effort": "Low",
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.508(a)(4)"
+  },
+  {
+    "id": "PRV-012",
+    "safeguard": "Privacy",
+    "standard": "Administrative Requirements",
+    "spec": "Privacy Officer Designation",
+    "status": "Required",
+    "description": "Designate a Privacy Officer responsible for the development and implementation of Privacy Rule policies and procedures, and a contact person to receive complaints and provide further information about the Notice of Privacy Practices.",
+    "evidence_types": ["privacy_officer_designation", "org_chart", "complaint_intake_procedure"],
+    "connector_signals": ["confluence", "manual"],
+    "soc2_overlap": [],
+    "remediation_effort": "Low",
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.530(a)"
+  },
+  {
+    "id": "PRV-013",
+    "safeguard": "Privacy",
+    "standard": "Administrative Requirements",
+    "spec": "Workforce Privacy Training",
+    "status": "Required",
+    "description": "Train all members of the workforce on Privacy Rule policies and procedures as necessary and appropriate to carry out their functions. Train new workforce members within a reasonable period of joining and retrain when material changes occur.",
+    "evidence_types": ["training_curriculum", "training_completion_records", "training_frequency"],
+    "connector_signals": ["confluence", "manual"],
+    "soc2_overlap": ["CC1.4"],
+    "remediation_effort": "Medium",
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.530(b)"
   },
   {
     "id": "TEC-001",
@@ -439,7 +752,8 @@
     "connector_signals": ["okta", "aws", "gcp", "azure"],
     "soc2_overlap": ["CC6.1", "CC6.2"],
     "remediation_effort": "Low",
-    "remediation_impact": "Critical"
+    "remediation_impact": "Critical",
+    "cfr_citation": "45 CFR §164.312(a)(2)(i)"
   },
   {
     "id": "TEC-002",
@@ -452,7 +766,8 @@
     "connector_signals": ["okta", "aws"],
     "soc2_overlap": ["A1.1"],
     "remediation_effort": "Medium",
-    "remediation_impact": "High"
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.312(a)(2)(ii)"
   },
   {
     "id": "TEC-003",
@@ -465,7 +780,8 @@
     "connector_signals": ["okta", "jamf", "intune"],
     "soc2_overlap": ["CC6.1"],
     "remediation_effort": "Low",
-    "remediation_impact": "Medium"
+    "remediation_impact": "Medium",
+    "cfr_citation": "45 CFR §164.312(a)(2)(iii)"
   },
   {
     "id": "TEC-004",
@@ -478,7 +794,8 @@
     "connector_signals": ["aws", "gcp", "azure"],
     "soc2_overlap": ["CC6.1", "CC6.7"],
     "remediation_effort": "Medium",
-    "remediation_impact": "Critical"
+    "remediation_impact": "Critical",
+    "cfr_citation": "45 CFR §164.312(a)(2)(iv)"
   },
   {
     "id": "TEC-005",
@@ -491,7 +808,8 @@
     "connector_signals": ["aws", "gcp", "azure", "okta"],
     "soc2_overlap": ["CC7.2"],
     "remediation_effort": "Medium",
-    "remediation_impact": "Critical"
+    "remediation_impact": "Critical",
+    "cfr_citation": "45 CFR §164.312(b)"
   },
   {
     "id": "TEC-006",
@@ -504,7 +822,8 @@
     "connector_signals": ["aws", "gcp", "azure"],
     "soc2_overlap": ["CC9.1"],
     "remediation_effort": "Medium",
-    "remediation_impact": "High"
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.312(c)(2)"
   },
   {
     "id": "TEC-007",
@@ -517,7 +836,8 @@
     "connector_signals": ["okta"],
     "soc2_overlap": ["CC6.1", "CC6.6"],
     "remediation_effort": "Low",
-    "remediation_impact": "Critical"
+    "remediation_impact": "Critical",
+    "cfr_citation": "45 CFR §164.312(d)"
   },
   {
     "id": "TEC-008",
@@ -530,7 +850,8 @@
     "connector_signals": ["aws", "gcp", "azure"],
     "soc2_overlap": ["CC6.7"],
     "remediation_effort": "Low",
-    "remediation_impact": "High"
+    "remediation_impact": "High",
+    "cfr_citation": "45 CFR §164.312(e)(2)(i)"
   },
   {
     "id": "TEC-009",
@@ -543,6 +864,7 @@
     "connector_signals": ["aws", "gcp", "azure", "google_workspace"],
     "soc2_overlap": ["CC6.7"],
     "remediation_effort": "Medium",
-    "remediation_impact": "Critical"
+    "remediation_impact": "Critical",
+    "cfr_citation": "45 CFR §164.312(e)(2)(ii)"
   }
 ]

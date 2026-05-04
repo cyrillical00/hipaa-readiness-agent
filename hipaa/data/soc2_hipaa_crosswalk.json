@@ -161,6 +161,55 @@
     "notes": "SOC2 security awareness training overlaps. Must add HIPAA-specific modules on ePHI handling and breach reporting."
   },
   {
+    "hipaa_id": "BRN-001",
+    "hipaa_spec": "Four Factor Risk Assessment",
+    "soc2_criteria": ["CC7.4"],
+    "overlap_type": "Partial",
+    "notes": "SOC2 incident response evaluation overlaps with the assessment workflow. HIPAA requires the four factor analysis specific to PHI compromise probability."
+  },
+  {
+    "hipaa_id": "BRN-002",
+    "hipaa_spec": "Individual Notice Within 60 Days",
+    "soc2_criteria": [],
+    "overlap_type": "None",
+    "notes": "No SOC2 equivalent. Individual breach notification content, timing, and delivery are HIPAA-specific obligations."
+  },
+  {
+    "hipaa_id": "BRN-003",
+    "hipaa_spec": "Media Notice for Breaches Affecting 500 or More",
+    "soc2_criteria": [],
+    "overlap_type": "None",
+    "notes": "No SOC2 equivalent. Media notification thresholds and timing are HIPAA-specific."
+  },
+  {
+    "hipaa_id": "BRN-004",
+    "hipaa_spec": "HHS Notification Requirements",
+    "soc2_criteria": [],
+    "overlap_type": "None",
+    "notes": "No SOC2 equivalent. Submission to the HHS Secretary via the OCR portal is a HIPAA-specific obligation."
+  },
+  {
+    "hipaa_id": "BRN-005",
+    "hipaa_spec": "BA Notice to Covered Entity",
+    "soc2_criteria": ["CC9.2"],
+    "overlap_type": "Partial",
+    "notes": "SOC2 vendor management covers communication of incidents. HIPAA requires the specific 60 day BA to CE notification with affected individual identifiers."
+  },
+  {
+    "hipaa_id": "BRN-006",
+    "hipaa_spec": "Documentation of Breach Decisions",
+    "soc2_criteria": ["CC7.4"],
+    "overlap_type": "Partial",
+    "notes": "SOC2 incident documentation overlaps. HIPAA requires the six year retention plus documented basis for any non breach determination."
+  },
+  {
+    "hipaa_id": "BRN-007",
+    "hipaa_spec": "Breach Response Plan",
+    "soc2_criteria": ["CC7.5"],
+    "overlap_type": "Partial",
+    "notes": "SOC2 recovery and incident response plans overlap. HIPAA requires breach specific roles, four factor decision criteria, and notification ownership."
+  },
+  {
     "hipaa_id": "PHY-001",
     "hipaa_spec": "Contingency Operations",
     "soc2_criteria": ["CC6.4"],
@@ -229,6 +278,97 @@
     "soc2_criteria": ["A1.2"],
     "overlap_type": "Full",
     "notes": "SOC2 backup procedures cover the backup-before-move requirement for ePHI media."
+  },
+  {
+    "hipaa_id": "PRV-001",
+    "hipaa_spec": "Notice of Privacy Practices",
+    "soc2_criteria": [],
+    "overlap_type": "None",
+    "notes": "No SOC2 equivalent. The Notice of Privacy Practices is a Privacy Rule artifact specific to HIPAA covered entities."
+  },
+  {
+    "hipaa_id": "PRV-002",
+    "hipaa_spec": "Right to Access PHI",
+    "soc2_criteria": [],
+    "overlap_type": "None",
+    "notes": "No SOC2 equivalent. The 30 day individual access right is a Privacy Rule obligation."
+  },
+  {
+    "hipaa_id": "PRV-003",
+    "hipaa_spec": "Right to Amend PHI",
+    "soc2_criteria": [],
+    "overlap_type": "None",
+    "notes": "No SOC2 equivalent. Patient amendment rights are Privacy Rule specific."
+  },
+  {
+    "hipaa_id": "PRV-004",
+    "hipaa_spec": "Right to Accounting of Disclosures",
+    "soc2_criteria": [],
+    "overlap_type": "None",
+    "notes": "No SOC2 equivalent. The six year disclosure accounting is a Privacy Rule artifact."
+  },
+  {
+    "hipaa_id": "PRV-005",
+    "hipaa_spec": "Right to Request Restrictions",
+    "soc2_criteria": [],
+    "overlap_type": "None",
+    "notes": "No SOC2 equivalent. Restriction requests are a Privacy Rule individual right."
+  },
+  {
+    "hipaa_id": "PRV-006",
+    "hipaa_spec": "Right to Confidential Communications",
+    "soc2_criteria": [],
+    "overlap_type": "None",
+    "notes": "No SOC2 equivalent. Alternate channel communication accommodations are Privacy Rule specific."
+  },
+  {
+    "hipaa_id": "PRV-007",
+    "hipaa_spec": "Minimum Necessary Standard",
+    "soc2_criteria": ["CC6.1"],
+    "overlap_type": "Partial",
+    "notes": "SOC2 logical access and least privilege overlap. HIPAA additionally requires minimum necessary standards for routine disclosures of PHI."
+  },
+  {
+    "hipaa_id": "PRV-008",
+    "hipaa_spec": "Authorization for Uses and Disclosures",
+    "soc2_criteria": [],
+    "overlap_type": "None",
+    "notes": "No SOC2 equivalent. Patient authorization content and validity rules are Privacy Rule specific."
+  },
+  {
+    "hipaa_id": "PRV-009",
+    "hipaa_spec": "Permitted Uses and Disclosures",
+    "soc2_criteria": [],
+    "overlap_type": "None",
+    "notes": "No SOC2 equivalent. Treatment, payment, healthcare operations, and listed public interest categories are Privacy Rule constructs."
+  },
+  {
+    "hipaa_id": "PRV-010",
+    "hipaa_spec": "Marketing Restrictions",
+    "soc2_criteria": [],
+    "overlap_type": "None",
+    "notes": "No SOC2 equivalent. Marketing authorization with remuneration disclosure is Privacy Rule specific."
+  },
+  {
+    "hipaa_id": "PRV-011",
+    "hipaa_spec": "Sale of PHI",
+    "soc2_criteria": [],
+    "overlap_type": "None",
+    "notes": "No SOC2 equivalent. Sale of PHI authorization is Privacy Rule specific."
+  },
+  {
+    "hipaa_id": "PRV-012",
+    "hipaa_spec": "Privacy Officer Designation",
+    "soc2_criteria": [],
+    "overlap_type": "None",
+    "notes": "SOC2 designates a security owner; the Privacy Officer is a separate Privacy Rule role. No reusable evidence."
+  },
+  {
+    "hipaa_id": "PRV-013",
+    "hipaa_spec": "Workforce Privacy Training",
+    "soc2_criteria": ["CC1.4"],
+    "overlap_type": "Partial",
+    "notes": "SOC2 commitment to competence overlaps with workforce training cadence. HIPAA additionally requires Privacy Rule specific curriculum and retraining on material changes."
   },
   {
     "hipaa_id": "TEC-001",

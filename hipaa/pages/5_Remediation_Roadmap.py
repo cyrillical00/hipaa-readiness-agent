@@ -1,5 +1,5 @@
 """
-Tab 5 — Remediation Roadmap
+Tab 5: Remediation Roadmap
 Claude-generated phased action plan, exportable as CSV.
 """
 import streamlit as st
@@ -22,7 +22,7 @@ from storage.github_jsonl import append_record
 from uuid import uuid4
 require_login()
 
-st.set_page_config(page_title="Remediation Roadmap — HIPAA Agent", layout="wide")
+st.set_page_config(page_title="Remediation Roadmap · HIPAA Agent", layout="wide")
 st.markdown("# Remediation Roadmap")
 st.caption(
     "Claude analyzes your gap assessment, BAA risks, and SOC2 overlap to generate "
@@ -35,6 +35,16 @@ controls = load_controls()
 crosswalk = load_crosswalk()
 soc2_status = st.session_state.get("soc2_status", "None")
 demo_mode = st.session_state.get("demo_mode", False)
+
+control_map = {c["id"]: c for c in controls}
+
+
+def fmt_control_ref(control_id: str) -> str:
+    c = control_map.get(control_id, {})
+    cit = c.get("cfr_citation", "")
+    if cit:
+        return f"{control_id}  ·  {cit}"
+    return control_id or ""
 
 # ── Prerequisites check ───────────────────────────────────────────────────────
 readiness = st.session_state.get("readiness_results")
@@ -193,7 +203,7 @@ if roadmap:
                     st.markdown(
                         f"<div style='background:#052e16;border:1px solid #22C55E;"
                         f"padding:12px;border-radius:6px;height:100%'>"
-                        f"<strong style='color:#22C55E'>{win.get('control_id', '')}</strong><br>"
+                        f"<strong style='color:#22C55E'>{fmt_control_ref(win.get('control_id', ''))}</strong><br>"
                         f"<span style='color:#E2E8F0;font-size:13px'>{win.get('title', '')}</span><br>"
                         f"<span style='color:#86efac;font-size:12px'>{win.get('description', '')}</span><br>"
                         f"<em style='color:#6ee7b7;font-size:11px'>Effort: {win.get('effort', '?')} · Impact: {win.get('impact', '?')}</em>"
@@ -221,7 +231,7 @@ if roadmap:
         counts_str = " · ".join(f"{v} {k}" for k, v in sorted(priority_counts.items()))
 
         with st.expander(
-            f"{phase_icon} **{phase.get('label', f'Phase {phase_num}')}** — {len(items)} actions · {counts_str}",
+            f"{phase_icon} **{phase.get('label', f'Phase {phase_num}')}** · {len(items)} actions · {counts_str}",
             expanded=(phase_num == 1),
         ):
             st.caption(phase.get("description", ""))
@@ -230,12 +240,12 @@ if roadmap:
             if items:
                 import pandas as pd
                 df = pd.DataFrame([{
-                    "ID": item.get("control_id", ""),
+                    "ID": fmt_control_ref(item.get("control_id", "")),
                     "Action": item.get("title", ""),
                     "Owner": item.get("owner_role", ""),
                     "Effort": item.get("effort", ""),
                     "Priority": item.get("priority", ""),
-                    "SOC2 Reuse": "✅" if item.get("soc2_reuse") else "—",
+                    "SOC2 Reuse": "✅" if item.get("soc2_reuse") else "·",
                     "Artifact": item.get("expected_artifact", ""),
                 } for item in items])
                 st.dataframe(
@@ -265,7 +275,7 @@ if roadmap:
                     f"border-left:4px solid {item_color};"
                     f"padding:10px 14px;border-radius:6px;margin-bottom:6px'>"
                     f"<div style='display:flex;justify-content:space-between'>"
-                    f"<strong style='color:#E2E8F0'>{item.get('control_id', '')}</strong> "
+                    f"<strong style='color:#E2E8F0'>{fmt_control_ref(item.get('control_id', ''))}</strong> "
                     f"<span style='color:{item_color};font-size:12px'>{p}</span>"
                     f"</div>"
                     f"<div style='color:#E2E8F0;font-size:13px;margin-top:2px'>"
@@ -298,7 +308,7 @@ if roadmap:
         )
     with col_e2:
         st.caption(
-            "CSV includes Summary, Description, Priority, Estimate, Labels, and Phase — "
+            "CSV includes Summary, Description, Priority, Estimate, Labels, and Phase, "
             "ready to import directly into Jira as a project sprint."
         )
 
@@ -307,17 +317,17 @@ else:
         st.markdown("""
 ### What the roadmap will include:
 
-**Phase 1 (0–30 days) — Critical Remediation**
+**Phase 1 (0–30 days) · Critical Remediation**
 - Required controls at 0% (immediate OCR audit risk)
-- CRITICAL BAA gaps — vendors with ePHI and no agreement
+- CRITICAL BAA gaps: vendors with ePHI and no agreement
 - Quick wins achievable in < 1 week
 
-**Phase 2 (31–90 days) — Policy & Documentation**
+**Phase 2 (31–90 days) · Policy & Documentation**
 - Addressable controls and policy documentation
 - Annual training program
 - BAA renewals and sub-contractor disclosures
 
-**Phase 3 (91–180 days) — Audit Readiness**
+**Phase 3 (91–180 days) · Audit Readiness**
 - DR plan testing and tabletop exercises
 - Evidence package preparation
 - Third-party assessment preparation

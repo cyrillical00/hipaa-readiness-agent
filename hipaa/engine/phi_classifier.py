@@ -25,11 +25,10 @@ HIGH_RISK_CONTROLS_BY_SYSTEM = {
 
 
 def classify_ephi_scope(org_context: dict) -> dict:
-    systems = org_context.get("ephi_systems", [])
+    systems = org_context.get("ephi_systems", []) or []
     remote = org_context.get("remote_workforce", False)
     ephi_leaves = org_context.get("ephi_leaves_org", False)
 
-    # Determine highest-risk controls for this org
     high_risk_ids = set()
     for system in systems:
         for ctrl_id in HIGH_RISK_CONTROLS_BY_SYSTEM.get(system, []):
@@ -41,7 +40,6 @@ def classify_ephi_scope(org_context: dict) -> dict:
     if ephi_leaves:
         high_risk_ids.update(["ADM-022", "TEC-008", "TEC-009"])
 
-    # Determine relevant connectors
     relevant_connectors = set()
     for system in systems:
         for conn in EPHI_SYSTEM_WEIGHTS.get(system, {}).get("connectors", []):
@@ -57,3 +55,32 @@ def classify_ephi_scope(org_context: dict) -> dict:
             EPHI_SYSTEM_WEIGHTS.get(s, {}).get("weight", 1.0) for s in systems
         ) if systems else 1.0,
     }
+
+
+def get_control_weight(control: dict, org_context: dict) -> float:
+    """Weight a control by ePHI relevance: 2.0 high-risk, 1.5 connector-relevant, 0.5 inapplicable physical, 1.0 default."""
+    if not isinstance(control, dict):
+        return 1.0
+    org_context = org_context or {}
+    scope = classify_ephi_scope(org_context)
+
+    ctrl_id = control.get("id", "")
+    safeguard = control.get("safeguard", "")
+    connector_signals = control.get("connector_signals", []) or []
+
+    if ctrl_id in set(scope.get("high_risk_control_ids", [])):
+        return 2.0
+
+    if safeguard == "Physical":
+        ephi_leaves = org_context.get("ephi_leaves_org")
+        systems = [s.lower() for s in (org_context.get("ephi_systems", []) or [])]
+        on_prem_keywords = ("on-prem", "on prem", "data center", "datacenter", "server room")
+        has_on_prem = any(k in s for s in systems for k in on_prem_keywords)
+        if ephi_leaves is False and not has_on_prem:
+            return 0.5
+
+    relevant = set(scope.get("relevant_connectors", []))
+    if relevant and any(c in relevant for c in connector_signals):
+        return 1.5
+
+    return 1.0
