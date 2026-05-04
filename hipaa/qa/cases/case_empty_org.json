@@ -1,0 +1,71 @@
+{
+  "name": "Greenfield Health Startup (empty)",
+  "description": "Brand new 25-person Business Associate. Zero controls implemented, no SOC2, no BAAs. Expects CRITICAL risk tier and substantial Phase 1 plan with no hallucinated controls.",
+  "org_context": {
+    "org_name": "Greenfield Health Startup",
+    "entity_type": "Business Associate",
+    "ephi_systems": ["Cloud Storage", "Custom Patient Portal"],
+    "ephi_leaves_org": true,
+    "soc2_status": "None",
+    "remote_workforce": true,
+    "workforce_size": 25
+  },
+  "control_statuses": {
+    "ADM-001": {"status": "Not Implemented", "evidence": false, "notes": "No risk analysis performed."},
+    "ADM-002": {"status": "Not Implemented", "evidence": false, "notes": "No risk register or mitigation plan."},
+    "ADM-003": {"status": "Not Implemented", "evidence": false, "notes": "No sanction policy."},
+    "ADM-004": {"status": "Not Implemented", "evidence": false, "notes": "No log review procedure."},
+    "ADM-005": {"status": "Not Implemented", "evidence": false, "notes": "No designated Security Officer."},
+    "ADM-015": {"status": "Not Implemented", "evidence": false, "notes": "No incident response plan."},
+    "ADM-016": {"status": "Not Implemented", "evidence": false, "notes": "No formal backup procedure."},
+    "ADM-017": {"status": "Not Implemented", "evidence": false, "notes": "No DR plan."},
+    "ADM-018": {"status": "Not Implemented", "evidence": false, "notes": "No emergency mode procedures."},
+    "ADM-021": {"status": "Not Implemented", "evidence": false, "notes": "No periodic evaluation."},
+    "ADM-022": {"status": "Not Implemented", "evidence": false, "notes": "No BAAs in place with any vendor."},
+    "ADM-023": {"status": "Not Implemented", "evidence": false, "alt_documented": false, "notes": "No HIPAA training."},
+    "PHY-005": {"status": "Not Implemented", "evidence": false, "notes": "No workstation acceptable use policy."},
+    "PHY-006": {"status": "Not Implemented", "evidence": false, "notes": "No workstation security controls."},
+    "PHY-007": {"status": "Not Implemented", "evidence": false, "notes": "No data disposal procedure."},
+    "PHY-008": {"status": "Not Implemented", "evidence": false, "notes": "No media sanitization policy."},
+    "PHY-004": {"status": "Not Implemented", "evidence": false, "alt_documented": false, "notes": "No maintenance log."},
+    "PHY-009": {"status": "Not Implemented", "evidence": false, "alt_documented": false, "notes": "No movement tracking."},
+    "TEC-001": {"status": "Not Implemented", "evidence": false, "notes": "Shared accounts in use."},
+    "TEC-002": {"status": "Not Implemented", "evidence": false, "notes": "No emergency access procedure."},
+    "TEC-005": {"status": "Not Implemented", "evidence": false, "notes": "No audit logging."},
+    "TEC-007": {"status": "Not Implemented", "evidence": false, "notes": "No MFA enforced."},
+    "TEC-004": {"status": "Not Implemented", "evidence": false, "alt_documented": false, "notes": "No encryption at rest."},
+    "TEC-008": {"status": "Not Implemented", "evidence": false, "alt_documented": false, "notes": "TLS not enforced."}
+  },
+  "connector_findings": {},
+  "control_results": {
+    "overall": 5.0,
+    "band_label": "Critical Gap",
+    "category_scores": {"Administrative": 4.0, "Physical": 6.0, "Technical": 5.0},
+    "critical_gaps": [
+      {"control_id": "ADM-001", "status": "Not Implemented", "notes": "No risk analysis."},
+      {"control_id": "ADM-002", "status": "Not Implemented", "notes": "No risk management."},
+      {"control_id": "ADM-005", "status": "Not Implemented", "notes": "No Security Officer."},
+      {"control_id": "ADM-022", "status": "Not Implemented", "notes": "No BAAs in place."},
+      {"control_id": "TEC-007", "status": "Not Implemented", "notes": "No MFA."},
+      {"control_id": "TEC-004", "status": "Not Implemented", "notes": "No encryption at rest."}
+    ],
+    "high_gaps": [
+      {"control_id": "ADM-015", "status": "Not Implemented", "notes": "No incident response plan."},
+      {"control_id": "ADM-023", "status": "Not Implemented", "notes": "No HIPAA training."},
+      {"control_id": "TEC-005", "status": "Not Implemented", "notes": "No audit logging."}
+    ]
+  },
+  "baa_summary": {"total": 0, "ephi_vendors": 0, "missing_baas": 0, "expired": 0, "expiring_90d": 0},
+  "overlap_analysis": {"coverage_pct": 0.0, "full_overlap": 0, "partial_overlap": 0, "no_overlap": 42},
+  "expected_score_shape": {
+    "must_have_keys": ["gap_summary", "overall_risk_tier", "critical_gaps", "high_gaps", "quick_wins", "audit_exposure", "positive_findings"],
+    "min_critical_gaps": 5,
+    "risk_tier_in": ["CRITICAL"]
+  },
+  "expected_roadmap_shape": {
+    "must_have_keys": ["executive_summary", "overall_risk_tier", "phases", "quick_wins"],
+    "phases_count": 3,
+    "min_items_per_phase": 5,
+    "must_address_control_ids": ["ADM-022", "ADM-005"]
+  }
+}

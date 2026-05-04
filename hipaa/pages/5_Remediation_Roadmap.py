@@ -11,9 +11,11 @@ from engine.roadmap_generator import generate_roadmap
 from engine.soc2_crosswalk import load_crosswalk, compute_overlap
 from engine.baa_engine import baa_summary as compute_baa_summary, enrich_baa_list
 from engine.control_mapper import load_controls
+from engine.validator import validate_roadmap
 from data.sample_assessment import DEMO_ORG_CONTEXT
 from data.sample_baas import DEMO_BAAS
 from utils.csv_exporter import export_roadmap_csv
+from ui.cost_panel import render_cost_panel
 
 st.set_page_config(page_title="Remediation Roadmap — HIPAA Agent", layout="wide")
 st.markdown("# Remediation Roadmap")
@@ -21,6 +23,8 @@ st.caption(
     "Claude analyzes your gap assessment, BAA risks, and SOC2 overlap to generate "
     "a phased, prioritized action plan."
 )
+
+render_cost_panel()
 
 controls = load_controls()
 crosswalk = load_crosswalk()
@@ -115,6 +119,11 @@ if gen_clicked:
                     readiness, controls, baa_sum, overlap, org_context, progress_placeholder
                 )
                 st.session_state.roadmap = roadmap
+                critical_gaps = readiness.get("critical_gaps", [])
+                high_gaps = readiness.get("high_gaps", [])
+                st.session_state.roadmap_validation = validate_roadmap(
+                    roadmap, critical_gaps, high_gaps, controls
+                )
                 progress_placeholder.empty()
                 st.rerun()
             except Exception as e:
@@ -124,6 +133,22 @@ if gen_clicked:
 # ── Render roadmap ────────────────────────────────────────────────────────────
 roadmap = st.session_state.get("roadmap")
 if roadmap:
+    validation = st.session_state.get("roadmap_validation")
+    if validation:
+        v_status = validation.get("status", "")
+        v_notes = validation.get("notes", "") or ""
+        v_missing = validation.get("missing_controls", []) or []
+        v_hallucinated = validation.get("hallucinated_controls", []) or []
+        if v_status == "pass":
+            msg = "Validator: roadmap addresses all critical gaps."
+            if v_notes:
+                msg = f"{msg} {v_notes}"
+            st.success(msg)
+        elif v_status == "warn":
+            st.warning(f"Validator flagged issues. Missing critical controls: {v_missing}. {v_notes}")
+        elif v_status == "fail":
+            st.error(f"Validator FAILED. Hallucinated controls: {v_hallucinated}. {v_notes}")
+
     # Executive summary
     risk_tier = roadmap.get("overall_risk_tier", "UNKNOWN")
     risk_colors = {"CRITICAL": "#DC2626", "HIGH": "#F97316", "MEDIUM": "#EAB308", "LOW": "#22C55E"}

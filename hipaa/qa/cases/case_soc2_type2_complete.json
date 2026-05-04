@@ -1,0 +1,84 @@
+{
+  "name": "Anchor Care SaaS (mature)",
+  "description": "Mature 400-person Business Associate, SOC2 Type II Complete, most controls Implemented. Risk tier should be LOW or MEDIUM and quick_wins should be sparse.",
+  "org_context": {
+    "org_name": "Anchor Care SaaS",
+    "entity_type": "Business Associate",
+    "ephi_systems": ["EHR Integration API", "Patient Data Lake", "Clinical Messaging"],
+    "ephi_leaves_org": true,
+    "soc2_status": "Type II Complete",
+    "remote_workforce": true,
+    "workforce_size": 400
+  },
+  "control_statuses": {
+    "ADM-001": {"status": "Implemented", "evidence": true, "notes": "Annual risk analysis updated 2 months ago."},
+    "ADM-002": {"status": "Implemented", "evidence": true, "notes": "Risk register actively managed."},
+    "ADM-003": {"status": "Implemented", "evidence": true, "notes": "Sanction policy reviewed yearly."},
+    "ADM-004": {"status": "Implemented", "evidence": true, "notes": "SOC2 driven log review weekly."},
+    "ADM-005": {"status": "Implemented", "evidence": true, "notes": "CISO formally appointed."},
+    "ADM-006": {"status": "Implemented", "evidence": true, "notes": "RBAC via Okta."},
+    "ADM-007": {"status": "Implemented", "evidence": true, "notes": "Background checks plus periodic reviews."},
+    "ADM-008": {"status": "Implemented", "evidence": true, "notes": "Automated offboarding via HRIS."},
+    "ADM-009": {"status": "Implemented", "evidence": true, "notes": "Lumos access governance."},
+    "ADM-010": {"status": "Implemented", "evidence": true, "notes": "Quarterly access reviews complete."},
+    "ADM-011": {"status": "Implemented", "evidence": true, "notes": "Annual training plus monthly phishing tests."},
+    "ADM-012": {"status": "Implemented", "evidence": true, "notes": "CrowdStrike fleet wide."},
+    "ADM-013": {"status": "Implemented", "evidence": true, "notes": "Datadog SIEM with alerting."},
+    "ADM-014": {"status": "Implemented", "evidence": true, "notes": "Okta password and MFA policy enforced."},
+    "ADM-015": {"status": "Implemented", "evidence": true, "notes": "Incident response plan with HIPAA breach addendum."},
+    "ADM-016": {"status": "Implemented", "evidence": true, "notes": "Cross region backups tested quarterly."},
+    "ADM-017": {"status": "Implemented", "evidence": true, "notes": "DR plan tested annually."},
+    "ADM-018": {"status": "Implemented", "evidence": true, "notes": "Emergency mode procedures documented."},
+    "ADM-019": {"status": "Implemented", "evidence": true, "alt_documented": null, "notes": "Tabletop exercise complete."},
+    "ADM-020": {"status": "Implemented", "evidence": true, "notes": "Application criticality matrix in place."},
+    "ADM-021": {"status": "Implemented", "evidence": true, "notes": "Annual HIPAA evaluation complete."},
+    "ADM-022": {"status": "Implemented", "evidence": true, "notes": "All 14 ePHI vendors have current BAAs."},
+    "ADM-023": {"status": "Implemented", "evidence": true, "alt_documented": null, "notes": "Annual HIPAA training tracked in LMS."},
+    "PHY-001": {"status": "Implemented", "evidence": true, "notes": "Badge access plus visitor logs."},
+    "PHY-002": {"status": "Implemented", "evidence": true, "notes": "Facility Security Plan documented."},
+    "PHY-003": {"status": "Implemented", "evidence": true, "notes": "Role based facility access matrix."},
+    "PHY-004": {"status": "Implemented", "evidence": true, "alt_documented": null, "notes": "Maintenance log automated via Jira."},
+    "PHY-005": {"status": "Implemented", "evidence": true, "notes": "Workstation use policy in handbook."},
+    "PHY-006": {"status": "Implemented", "evidence": true, "notes": "Full MDM coverage; no BYOD."},
+    "PHY-007": {"status": "Implemented", "evidence": true, "notes": "Hardware vendor destruction certificates."},
+    "PHY-008": {"status": "Implemented", "evidence": true, "notes": "NIST 800-88 sanitization."},
+    "PHY-009": {"status": "Partial", "evidence": false, "alt_documented": false, "notes": "Movement log only for laptops; mobile devices missing."},
+    "PHY-010": {"status": "Implemented", "evidence": true, "notes": "Cloud storage backup procedures."},
+    "TEC-001": {"status": "Implemented", "evidence": true, "notes": "Unique IDs enforced."},
+    "TEC-002": {"status": "Implemented", "evidence": true, "notes": "Break glass procedure tested annually."},
+    "TEC-003": {"status": "Implemented", "evidence": true, "notes": "10 minute screen lock enforced."},
+    "TEC-004": {"status": "Implemented", "evidence": true, "notes": "KMS managed encryption at rest."},
+    "TEC-005": {"status": "Implemented", "evidence": true, "notes": "7 year audit log retention in S3 Glacier."},
+    "TEC-006": {"status": "Implemented", "evidence": true, "notes": "Integrity verification via checksums and signed exports."},
+    "TEC-007": {"status": "Implemented", "evidence": true, "notes": "MFA via WebAuthn enforced."},
+    "TEC-008": {"status": "Implemented", "evidence": true, "notes": "TLS 1.3 enforced everywhere."},
+    "TEC-009": {"status": "Partial", "evidence": false, "alt_documented": false, "notes": "Email TLS confirmed inbound; outbound not yet enforced."}
+  },
+  "connector_findings": {
+    "okta": {"mfa_enforced": true, "unique_user_ids": true, "auto_logoff_minutes": 10, "password_policy_strong": true, "audit_log_retention_days": 365, "active_user_count": 395, "admin_group_count": 5, "inactive_users_count": 2, "device_trust_enabled": true},
+    "aws": {"s3_default_encryption": true, "s3_bucket_count": 38, "s3_encrypted_count": 38, "cloudtrail_enabled": true, "cloudtrail_trail_count": 4, "kms_in_use": true, "kms_key_count": 22, "log_retention_days": 2555, "public_buckets": 0, "vpc_flow_logs_enabled": true}
+  },
+  "control_results": {
+    "overall": 95.5,
+    "band_label": "Audit Ready",
+    "category_scores": {"Administrative": 98.0, "Physical": 92.0, "Technical": 96.5},
+    "critical_gaps": [],
+    "high_gaps": [
+      {"control_id": "PHY-009", "status": "Partial", "notes": "Mobile device movement tracking incomplete."},
+      {"control_id": "TEC-009", "status": "Partial", "notes": "Outbound email TLS not enforced."}
+    ]
+  },
+  "baa_summary": {"total": 22, "ephi_vendors": 14, "missing_baas": 0, "expired": 0, "expiring_90d": 1},
+  "overlap_analysis": {"coverage_pct": 88.0, "full_overlap": 18, "partial_overlap": 19, "no_overlap": 5},
+  "expected_score_shape": {
+    "must_have_keys": ["gap_summary", "overall_risk_tier", "critical_gaps", "high_gaps", "quick_wins", "audit_exposure", "positive_findings"],
+    "min_critical_gaps": 0,
+    "risk_tier_in": ["LOW", "MEDIUM"]
+  },
+  "expected_roadmap_shape": {
+    "must_have_keys": ["executive_summary", "overall_risk_tier", "phases", "quick_wins"],
+    "phases_count": 3,
+    "min_items_per_phase": 5,
+    "must_address_control_ids": ["PHY-009"]
+  }
+}
