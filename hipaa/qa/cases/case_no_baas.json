@@ -1,0 +1,89 @@
+{
+  "name": "ClaimPath Analytics (small BA, BAA crisis)",
+  "description": "30-person Business Associate. 3 BAAs total, 2 missing for active ePHI vendors. Phase 1 should target the missing BAAs with vendor names.",
+  "org_context": {
+    "org_name": "ClaimPath Analytics",
+    "entity_type": "Business Associate",
+    "ephi_systems": ["AWS S3 Claims Lake", "Snowflake Warehouse", "Looker Dashboards"],
+    "ephi_leaves_org": true,
+    "soc2_status": "Type I In Progress",
+    "remote_workforce": true,
+    "workforce_size": 30
+  },
+  "control_statuses": {
+    "ADM-001": {"status": "Partial", "evidence": true, "notes": "Risk analysis from SOC2 prep; not HIPAA scoped."},
+    "ADM-002": {"status": "Partial", "evidence": true, "notes": "Mitigation tracked in Linear."},
+    "ADM-003": {"status": "Implemented", "evidence": true, "notes": "Sanction policy in handbook."},
+    "ADM-004": {"status": "Partial", "evidence": false, "notes": "CloudTrail enabled; reviews ad hoc."},
+    "ADM-005": {"status": "Implemented", "evidence": true, "notes": "Founding engineer named Security Officer."},
+    "ADM-006": {"status": "Implemented", "evidence": true, "notes": "Okta SSO across stack."},
+    "ADM-007": {"status": "Implemented", "evidence": true, "notes": "Background checks at hire."},
+    "ADM-008": {"status": "Implemented", "evidence": true, "notes": "Same day Okta deprovisioning."},
+    "ADM-009": {"status": "Partial", "evidence": false, "notes": "Manager approval verbal."},
+    "ADM-010": {"status": "Partial", "evidence": false, "notes": "Annual review only."},
+    "ADM-011": {"status": "Partial", "evidence": false, "notes": "No tracked training program."},
+    "ADM-012": {"status": "Implemented", "evidence": true, "notes": "Jamf with built in protections."},
+    "ADM-013": {"status": "Partial", "evidence": false, "notes": "Okta alerts on; no documented procedure."},
+    "ADM-014": {"status": "Implemented", "evidence": true, "notes": "Okta enforces strong password and MFA."},
+    "ADM-015": {"status": "Partial", "evidence": false, "notes": "SOC2 incident plan; no breach addendum."},
+    "ADM-016": {"status": "Implemented", "evidence": true, "notes": "S3 versioning plus cross region replication."},
+    "ADM-017": {"status": "Not Implemented", "evidence": false, "notes": "No DR plan."},
+    "ADM-018": {"status": "Not Implemented", "evidence": false, "notes": "No emergency mode procedure."},
+    "ADM-019": {"status": "Not Implemented", "evidence": false, "alt_documented": false, "notes": "Backup restore never tested."},
+    "ADM-020": {"status": "Not Implemented", "evidence": false, "notes": "No criticality matrix."},
+    "ADM-021": {"status": "Not Implemented", "evidence": false, "notes": "No periodic evaluation."},
+    "ADM-022": {"status": "Not Implemented", "evidence": false, "notes": "Snowflake and Looker have no BAA; both ingest claims data."},
+    "ADM-023": {"status": "Not Implemented", "evidence": false, "alt_documented": false, "notes": "No formal HIPAA training."},
+    "PHY-001": {"status": "Implemented", "evidence": true, "notes": "Coworking access cards."},
+    "PHY-002": {"status": "Partial", "evidence": false, "notes": "No facility plan."},
+    "PHY-003": {"status": "Partial", "evidence": false, "notes": "Coworking issues access; no role matrix."},
+    "PHY-004": {"status": "Not Implemented", "evidence": false, "alt_documented": false, "notes": "Cloud only; no log."},
+    "PHY-005": {"status": "Implemented", "evidence": true, "notes": "AUP in handbook."},
+    "PHY-006": {"status": "Implemented", "evidence": true, "notes": "Jamf enforced screen lock."},
+    "PHY-007": {"status": "Partial", "evidence": false, "notes": "Old laptops returned; no destruction certificate."},
+    "PHY-008": {"status": "Partial", "evidence": false, "notes": "Drive wipe via Jamf; not formal policy."},
+    "PHY-009": {"status": "Not Implemented", "evidence": false, "alt_documented": false, "notes": "No movement log."},
+    "PHY-010": {"status": "Implemented", "evidence": true, "notes": "S3 cross region replication."},
+    "TEC-001": {"status": "Implemented", "evidence": true, "notes": "Okta unique IDs."},
+    "TEC-002": {"status": "Partial", "evidence": false, "notes": "Break glass account exists; not tested."},
+    "TEC-003": {"status": "Implemented", "evidence": true, "notes": "5 minute screen lock via Jamf."},
+    "TEC-004": {"status": "Implemented", "evidence": true, "notes": "S3 SSE plus Snowflake encryption."},
+    "TEC-005": {"status": "Partial", "evidence": false, "notes": "CloudTrail 90 days only."},
+    "TEC-006": {"status": "Partial", "evidence": false, "notes": "No documented integrity verification."},
+    "TEC-007": {"status": "Implemented", "evidence": true, "notes": "Okta MFA enforced."},
+    "TEC-008": {"status": "Implemented", "evidence": true, "notes": "TLS 1.2 plus enforced."},
+    "TEC-009": {"status": "Partial", "evidence": false, "alt_documented": false, "notes": "Email TLS unverified."}
+  },
+  "connector_findings": {
+    "okta": {"mfa_enforced": true, "unique_user_ids": true, "auto_logoff_minutes": 5, "password_policy_strong": true, "audit_log_retention_days": 90, "active_user_count": 28, "admin_group_count": 2, "inactive_users_count": 0, "device_trust_enabled": true},
+    "aws": {"s3_default_encryption": true, "s3_bucket_count": 6, "s3_encrypted_count": 6, "cloudtrail_enabled": true, "cloudtrail_trail_count": 1, "kms_in_use": true, "kms_key_count": 3, "log_retention_days": 90, "public_buckets": 0, "vpc_flow_logs_enabled": false}
+  },
+  "control_results": {
+    "overall": 55.0,
+    "band_label": "Partial",
+    "category_scores": {"Administrative": 52.0, "Physical": 58.0, "Technical": 64.0},
+    "critical_gaps": [
+      {"control_id": "ADM-022", "status": "Not Implemented", "notes": "Snowflake and Looker active without BAAs; claims data exposed."},
+      {"control_id": "ADM-021", "status": "Not Implemented", "notes": "No periodic HIPAA evaluation."},
+      {"control_id": "ADM-017", "status": "Not Implemented", "notes": "No DR plan."}
+    ],
+    "high_gaps": [
+      {"control_id": "ADM-019", "status": "Not Implemented", "notes": "Backup restore never tested."},
+      {"control_id": "ADM-023", "status": "Not Implemented", "notes": "No HIPAA training."},
+      {"control_id": "TEC-005", "status": "Partial", "notes": "Audit log retention only 90 days."}
+    ]
+  },
+  "baa_summary": {"total": 3, "ephi_vendors": 4, "missing_baas": 2, "expired": 0, "expiring_90d": 0},
+  "overlap_analysis": {"coverage_pct": 28.0, "full_overlap": 3, "partial_overlap": 9, "no_overlap": 30},
+  "expected_score_shape": {
+    "must_have_keys": ["gap_summary", "overall_risk_tier", "critical_gaps", "high_gaps", "quick_wins", "audit_exposure", "positive_findings"],
+    "min_critical_gaps": 2,
+    "risk_tier_in": ["CRITICAL", "HIGH"]
+  },
+  "expected_roadmap_shape": {
+    "must_have_keys": ["executive_summary", "overall_risk_tier", "phases", "quick_wins"],
+    "phases_count": 3,
+    "min_items_per_phase": 5,
+    "must_address_control_ids": ["ADM-022"]
+  }
+}

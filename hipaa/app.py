@@ -8,6 +8,8 @@ import os
 
 sys.path.insert(0, os.path.dirname(__file__))
 
+from ui.cost_panel import render_cost_panel
+
 st.set_page_config(
     page_title="HIPAA Readiness Agent",
     page_icon="🏥",
@@ -139,6 +141,9 @@ with st.sidebar:
         band = st.session_state.readiness_results.get("band_label", "")
         color = st.session_state.readiness_results.get("band_color", "#6B7280")
         st.markdown(f"**Last Score:** <span style='color:{color}'>{score:.1f}% — {band}</span>", unsafe_allow_html=True)
+
+    st.divider()
+    render_cost_panel()
 
 # ── Main page ─────────────────────────────────────────────────────────────────
 col1, col2 = st.columns([3, 1])

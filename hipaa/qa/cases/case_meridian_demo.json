@@ -1,0 +1,94 @@
+{
+  "name": "Meridian Health Tech (demo)",
+  "description": "Default demo: 150-person Business Associate, SOC2 Type I complete, 5 critical BAA gaps, several Required controls partially or not implemented.",
+  "org_context": {
+    "org_name": "Meridian Health Tech",
+    "entity_type": "Business Associate",
+    "ephi_systems": ["Cloud Storage", "EHR Integration API", "Billing System", "Internal Messaging"],
+    "ephi_leaves_org": true,
+    "soc2_status": "Type I Complete",
+    "remote_workforce": true,
+    "workforce_size": 150
+  },
+  "control_statuses": {
+    "ADM-001": {"status": "Partial", "evidence": true, "notes": "Risk analysis 3 years old; not updated after cloud migration."},
+    "ADM-002": {"status": "Partial", "evidence": true, "notes": "Risk register exists but several items unmitigated."},
+    "ADM-003": {"status": "Implemented", "evidence": true, "notes": "Sanction policy in employee handbook."},
+    "ADM-004": {"status": "Partial", "evidence": false, "notes": "Logs in CloudTrail and Okta, no formal review cadence."},
+    "ADM-005": {"status": "Implemented", "evidence": true, "notes": "VP Engineering designated as Security Officer."},
+    "ADM-015": {"status": "Partial", "evidence": true, "notes": "Incident response from SOC2; no ePHI breach notification procedure."},
+    "ADM-016": {"status": "Implemented", "evidence": true, "notes": "Daily AWS S3 snapshot backups configured."},
+    "ADM-017": {"status": "Partial", "evidence": true, "notes": "DR plan documented but never tested."},
+    "ADM-018": {"status": "Partial", "evidence": false, "notes": "Emergency mode procedures not documented for ePHI systems."},
+    "ADM-021": {"status": "Not Implemented", "evidence": false, "notes": "No HIPAA evaluation performed since initial review."},
+    "ADM-022": {"status": "Not Implemented", "evidence": false, "notes": "BAAs missing for Google Workspace, Slack, DataDog, Snowflake, Retool."},
+    "ADM-006": {"status": "Implemented", "evidence": true, "notes": "Access tied to Okta role assignments."},
+    "ADM-007": {"status": "Implemented", "evidence": true, "notes": "Background checks plus quarterly access reviews."},
+    "ADM-008": {"status": "Implemented", "evidence": true, "notes": "Offboarding checklist with immediate Okta deprovisioning."},
+    "ADM-009": {"status": "Implemented", "evidence": true, "notes": "Access requests via Jira with manager approval."},
+    "ADM-010": {"status": "Implemented", "evidence": true, "notes": "Quarterly access reviews documented."},
+    "ADM-011": {"status": "Partial", "evidence": false, "notes": "Informal Slack reminders; no policy or tracking."},
+    "ADM-012": {"status": "Implemented", "evidence": true, "notes": "CrowdStrike on all managed endpoints."},
+    "ADM-013": {"status": "Partial", "evidence": false, "notes": "Okta login alerts present, no formal monitoring procedure."},
+    "ADM-014": {"status": "Implemented", "evidence": true, "notes": "Okta password policy 12 char min plus MFA."},
+    "ADM-019": {"status": "Not Implemented", "evidence": false, "alt_documented": false, "notes": "DR plan never tested."},
+    "ADM-020": {"status": "Partial", "evidence": false, "notes": "No ePHI specific criticality matrix."},
+    "ADM-023": {"status": "Not Implemented", "evidence": false, "alt_documented": false, "notes": "No documented annual HIPAA training program."},
+    "PHY-005": {"status": "Implemented", "evidence": true, "notes": "AUP covers workstations with remote work addendum."},
+    "PHY-006": {"status": "Partial", "evidence": false, "notes": "Screen lock on managed devices; 40 percent BYOD."},
+    "PHY-007": {"status": "Implemented", "evidence": true, "notes": "Hardware vendor provides certificates of destruction."},
+    "PHY-008": {"status": "Implemented", "evidence": true, "notes": "NIST 800-88 referenced sanitization policy."},
+    "PHY-001": {"status": "Implemented", "evidence": true, "notes": "Cloud primary; primary facility has badge access."},
+    "PHY-002": {"status": "Partial", "evidence": false, "notes": "No formal Facility Security Plan written."},
+    "PHY-003": {"status": "Partial", "evidence": false, "notes": "Badge access exists; no role-based physical access matrix."},
+    "PHY-004": {"status": "Not Implemented", "evidence": false, "alt_documented": false, "notes": "No maintenance log for physical systems in ePHI environment."},
+    "PHY-009": {"status": "Not Implemented", "evidence": false, "alt_documented": false, "notes": "No device or media movement tracking log."},
+    "PHY-010": {"status": "Implemented", "evidence": true, "notes": "AWS backup procedures cover cloud storage."},
+    "TEC-001": {"status": "Implemented", "evidence": true, "notes": "Unique Okta IDs for all users."},
+    "TEC-002": {"status": "Implemented", "evidence": true, "notes": "Break glass AWS account documented and tested annually."},
+    "TEC-005": {"status": "Partial", "evidence": true, "notes": "CloudTrail and Okta logs at 90 day retention; HIPAA suggests 6 years."},
+    "TEC-007": {"status": "Implemented", "evidence": true, "notes": "Okta MFA enforced for all users including contractors."},
+    "TEC-003": {"status": "Implemented", "evidence": true, "notes": "15 minute screen lock via Okta and MDM."},
+    "TEC-004": {"status": "Implemented", "evidence": true, "notes": "S3 SSE-AES256 plus RDS encryption with AWS KMS."},
+    "TEC-006": {"status": "Partial", "evidence": false, "notes": "Database checksums on, no formal integrity verification for ePHI exports."},
+    "TEC-008": {"status": "Implemented", "evidence": true, "notes": "TLS 1.2 plus enforced on all API endpoints."},
+    "TEC-009": {"status": "Partial", "evidence": false, "notes": "APIs use TLS; opportunistic TLS not confirmed for Google Workspace email."}
+  },
+  "connector_findings": {
+    "okta": {"mfa_enforced": true, "unique_user_ids": true, "auto_logoff_minutes": 15, "password_policy_strong": true, "audit_log_retention_days": 90, "active_user_count": 148, "admin_group_count": 3, "inactive_users_count": 4, "device_trust_enabled": false},
+    "aws": {"s3_default_encryption": true, "s3_bucket_count": 12, "s3_encrypted_count": 12, "cloudtrail_enabled": true, "cloudtrail_trail_count": 2, "kms_in_use": true, "kms_key_count": 5, "log_retention_days": 90, "public_buckets": 0, "vpc_flow_logs_enabled": true},
+    "google_workspace": {"tls_enforced_inbound": false, "dlp_enabled": false, "drive_sharing_restricted": true, "audit_log_enabled": true, "audit_log_retention_days": 180, "baa_in_place": false, "2sv_enforced": true, "external_sharing_disabled": false}
+  },
+  "control_results": {
+    "overall": 70.7,
+    "band_label": "Partial",
+    "category_scores": {"Administrative": 68.0, "Physical": 75.0, "Technical": 71.5},
+    "critical_gaps": [
+      {"control_id": "ADM-022", "status": "Not Implemented", "notes": "BAAs missing for Google Workspace, Slack, DataDog, Snowflake, Retool."},
+      {"control_id": "ADM-021", "status": "Not Implemented", "notes": "No HIPAA evaluation performed since initial review."},
+      {"control_id": "ADM-019", "status": "Not Implemented", "notes": "DR plan never tested."},
+      {"control_id": "PHY-004", "status": "Not Implemented", "notes": "No maintenance log for physical systems handling ePHI."},
+      {"control_id": "PHY-009", "status": "Not Implemented", "notes": "No device or media movement tracking."}
+    ],
+    "high_gaps": [
+      {"control_id": "ADM-001", "status": "Partial", "notes": "Risk analysis 3 years stale."},
+      {"control_id": "ADM-015", "status": "Partial", "notes": "Missing ePHI specific breach notification."},
+      {"control_id": "ADM-023", "status": "Not Implemented", "notes": "No annual HIPAA training program."},
+      {"control_id": "PHY-002", "status": "Partial", "notes": "No formal Facility Security Plan."},
+      {"control_id": "TEC-005", "status": "Partial", "notes": "Audit log retention only 90 days."}
+    ]
+  },
+  "baa_summary": {"total": 12, "ephi_vendors": 8, "missing_baas": 5, "expired": 1, "expiring_90d": 2},
+  "overlap_analysis": {"coverage_pct": 42.0, "full_overlap": 5, "partial_overlap": 12, "no_overlap": 25},
+  "expected_score_shape": {
+    "must_have_keys": ["gap_summary", "overall_risk_tier", "critical_gaps", "high_gaps", "quick_wins", "audit_exposure", "positive_findings"],
+    "min_critical_gaps": 3,
+    "risk_tier_in": ["CRITICAL", "HIGH"]
+  },
+  "expected_roadmap_shape": {
+    "must_have_keys": ["executive_summary", "overall_risk_tier", "phases", "quick_wins"],
+    "phases_count": 3,
+    "min_items_per_phase": 5,
+    "must_address_control_ids": ["ADM-022"]
+  }
+}

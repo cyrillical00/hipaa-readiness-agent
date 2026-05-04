@@ -1,17 +1,5 @@
-"""
-Claude API integration for generating phased HIPAA remediation roadmaps.
-"""
-import json
-import os
-import streamlit as st
-import anthropic
-
-
-def _get_client() -> anthropic.Anthropic:
-    api_key = st.secrets.get("ANTHROPIC_API_KEY", os.environ.get("ANTHROPIC_API_KEY", ""))
-    if not api_key:
-        raise ValueError("ANTHROPIC_API_KEY not configured in secrets.")
-    return anthropic.Anthropic(api_key=api_key)
+"""Claude API integration for generating phased HIPAA remediation roadmaps."""
+from engine.claude_client import ClaudeWrapper
 
 
 def build_roadmap_prompt(
@@ -76,7 +64,7 @@ def build_roadmap_prompt(
 - Partial overlap controls: {overlap_analysis.get('partial_overlap', 0)}
 - No SOC2 coverage: {overlap_analysis.get('no_overlap', 0)}
 
----
+___
 
 Generate a JSON response ONLY (no markdown, no explanation) with this exact structure:
 {{
@@ -85,7 +73,7 @@ Generate a JSON response ONLY (no markdown, no explanation) with this exact stru
   "phases": [
     {{
       "phase": 1,
-      "label": "0–30 Days: Critical Remediation",
+      "label": "0 to 30 Days: Critical Remediation",
       "description": "Brief phase description",
       "items": [
         {{
@@ -103,13 +91,13 @@ Generate a JSON response ONLY (no markdown, no explanation) with this exact stru
     }},
     {{
       "phase": 2,
-      "label": "31–90 Days: Policy & Documentation",
+      "label": "31 to 90 Days: Policy and Documentation",
       "description": "...",
       "items": [...]
     }},
     {{
       "phase": 3,
-      "label": "91–180 Days: Audit Readiness",
+      "label": "91 to 180 Days: Audit Readiness",
       "description": "...",
       "items": [...]
     }}
@@ -126,12 +114,12 @@ Generate a JSON response ONLY (no markdown, no explanation) with this exact stru
 }}
 
 Rules:
-- Phase 1: Required controls at 0%, all CRITICAL BAA gaps, items that can be done in < 1 week
+- Phase 1: Required controls at 0%, all CRITICAL BAA gaps, items that can be done in under 1 week
 - Phase 2: Addressable controls, policy docs, training program, BAA renewals
 - Phase 3: DR testing, audit prep, evidence packages, third-party assessment readiness
 - Include at least 5 items per phase
 - Quick wins must be small effort (S) with high or critical impact
-- Be specific — name the exact vendor, system, or policy document needed
+- Be specific. Name the exact vendor, system, or policy document needed.
 - Note where SOC2 Type I evidence can be directly reused
 """
 
@@ -144,37 +132,25 @@ def generate_roadmap(
     org_context: dict,
     stream_placeholder=None,
 ) -> dict:
-    """Call Claude to generate roadmap. Returns parsed JSON dict."""
-    client = _get_client()
     prompt = build_roadmap_prompt(
         control_results, controls, baa_summary, overlap_analysis, org_context
     )
 
-    full_text = ""
-    with client.messages.stream(
-        model="claude-sonnet-4-6",
+    system_prompt = (
+        "You are a HIPAA Security Rule compliance expert. You generate precise, actionable "
+        "remediation roadmaps. Always respond with valid JSON only. No markdown code blocks, "
+        "no preamble, no explanation. Output must be parseable by json.loads()."
+    )
+
+    wrapper = ClaudeWrapper(model="claude-sonnet-4-6")
+    parsed, _ = wrapper.stream_json(
+        system_prompt=system_prompt,
+        user_prompt=prompt,
         max_tokens=4096,
-        system=(
-            "You are a HIPAA Security Rule compliance expert. You generate precise, actionable "
-            "remediation roadmaps. Always respond with valid JSON only — no markdown code blocks, "
-            "no preamble, no explanation. Output must be parseable by json.loads()."
-        ),
-        messages=[{"role": "user", "content": prompt}],
-    ) as stream:
-        for text in stream.text_stream:
-            full_text += text
-            if stream_placeholder:
-                stream_placeholder.text(f"Generating roadmap... {len(full_text)} chars")
-
-    # Clean up any accidental markdown fencing
-    cleaned = full_text.strip()
-    if cleaned.startswith("```"):
-        cleaned = cleaned.split("```")[1]
-        if cleaned.startswith("json"):
-            cleaned = cleaned[4:]
-    cleaned = cleaned.strip()
-
-    return json.loads(cleaned)
+        stream_placeholder=stream_placeholder,
+        progress_label="Generating roadmap",
+    )
+    return parsed
 
 
 def score_assessment_with_claude(
@@ -184,12 +160,6 @@ def score_assessment_with_claude(
     org_context: dict,
     stream_placeholder=None,
 ) -> dict:
-    """
-    Claude call #1: scores controls, flags gaps, classifies risk tiers.
-    Returns structured gap analysis JSON.
-    """
-    client = _get_client()
-
     control_map = {c["id"]: c for c in controls}
     control_summary = []
     for ctrl_id, status_info in control_statuses.items():
@@ -228,26 +198,17 @@ Return valid JSON only:
   "positive_findings": ["List of controls that are well-implemented"]
 }}"""
 
-    full_text = ""
-    with client.messages.stream(
-        model="claude-sonnet-4-6",
+    system_prompt = (
+        "You are a HIPAA Security Rule auditor. Respond with valid JSON only. No markdown, "
+        "no preamble. Output must be parseable by json.loads()."
+    )
+
+    wrapper = ClaudeWrapper(model="claude-sonnet-4-6")
+    parsed, _ = wrapper.stream_json(
+        system_prompt=system_prompt,
+        user_prompt=prompt,
         max_tokens=2048,
-        system=(
-            "You are a HIPAA Security Rule auditor. Respond with valid JSON only — no markdown, "
-            "no preamble. Output must be parseable by json.loads()."
-        ),
-        messages=[{"role": "user", "content": prompt}],
-    ) as stream:
-        for text in stream.text_stream:
-            full_text += text
-            if stream_placeholder:
-                stream_placeholder.text(f"Analyzing controls... {len(full_text)} chars")
-
-    cleaned = full_text.strip()
-    if cleaned.startswith("```"):
-        cleaned = cleaned.split("```")[1]
-        if cleaned.startswith("json"):
-            cleaned = cleaned[4:]
-    cleaned = cleaned.strip()
-
-    return json.loads(cleaned)
+        stream_placeholder=stream_placeholder,
+        progress_label="Analyzing controls",
+    )
+    return parsed

@@ -1,0 +1,91 @@
+{
+  "name": "Riverside Family Clinic (Covered Entity)",
+  "description": "75-person Covered Entity, ePHI does not leave the organization, mixed control statuses. Tests Privacy Rule flavored questions and on premises infrastructure assumptions.",
+  "org_context": {
+    "org_name": "Riverside Family Clinic",
+    "entity_type": "Covered Entity",
+    "ephi_systems": ["On-Premise EHR", "Local File Server", "Practice Management System"],
+    "ephi_leaves_org": false,
+    "soc2_status": "None",
+    "remote_workforce": false,
+    "workforce_size": 75
+  },
+  "control_statuses": {
+    "ADM-001": {"status": "Partial", "evidence": false, "notes": "Old risk analysis in binder; no electronic copy."},
+    "ADM-002": {"status": "Partial", "evidence": false, "notes": "Risks identified verbally; not formally tracked."},
+    "ADM-003": {"status": "Implemented", "evidence": true, "notes": "Sanction policy in employee handbook."},
+    "ADM-004": {"status": "Not Implemented", "evidence": false, "notes": "EHR audit logs exist but unreviewed."},
+    "ADM-005": {"status": "Implemented", "evidence": true, "notes": "Practice Manager designated Privacy and Security Officer."},
+    "ADM-006": {"status": "Implemented", "evidence": true, "notes": "EHR roles enforced via vendor RBAC."},
+    "ADM-007": {"status": "Partial", "evidence": false, "notes": "Background checks for clinical staff only."},
+    "ADM-008": {"status": "Implemented", "evidence": true, "notes": "Termination checklist disables EHR access same day."},
+    "ADM-009": {"status": "Partial", "evidence": false, "notes": "Access requests verbal; not documented."},
+    "ADM-010": {"status": "Not Implemented", "evidence": false, "notes": "No periodic access review."},
+    "ADM-011": {"status": "Partial", "evidence": false, "notes": "HIPAA training done at hire; no refresh."},
+    "ADM-012": {"status": "Partial", "evidence": false, "notes": "Antivirus on workstations; no central management."},
+    "ADM-013": {"status": "Not Implemented", "evidence": false, "notes": "No login monitoring."},
+    "ADM-014": {"status": "Partial", "evidence": true, "notes": "8 character password minimum; no MFA."},
+    "ADM-015": {"status": "Partial", "evidence": false, "notes": "Generic incident plan; no breach notification workflow."},
+    "ADM-016": {"status": "Implemented", "evidence": true, "notes": "Nightly backups to external NAS."},
+    "ADM-017": {"status": "Not Implemented", "evidence": false, "notes": "No DR plan documented."},
+    "ADM-018": {"status": "Partial", "evidence": false, "notes": "Generator on site; no documented mode."},
+    "ADM-019": {"status": "Not Implemented", "evidence": false, "alt_documented": false, "notes": "Backup restores never tested."},
+    "ADM-020": {"status": "Partial", "evidence": false, "notes": "EHR identified as critical; nothing else classified."},
+    "ADM-021": {"status": "Not Implemented", "evidence": false, "notes": "No periodic technical evaluation."},
+    "ADM-022": {"status": "Partial", "evidence": true, "notes": "BAAs in place with EHR vendor and billing service; missing for IT MSP."},
+    "ADM-023": {"status": "Partial", "evidence": false, "alt_documented": false, "notes": "New hire orientation covers HIPAA basics only."},
+    "PHY-001": {"status": "Implemented", "evidence": true, "notes": "Server room locked; key with Practice Manager only."},
+    "PHY-002": {"status": "Partial", "evidence": false, "notes": "No formal Facility Security Plan."},
+    "PHY-003": {"status": "Partial", "evidence": false, "notes": "Server room access by key; no log."},
+    "PHY-004": {"status": "Partial", "evidence": false, "alt_documented": false, "notes": "MSP performs maintenance; no log retained."},
+    "PHY-005": {"status": "Implemented", "evidence": true, "notes": "Workstation use covered in employee handbook."},
+    "PHY-006": {"status": "Partial", "evidence": false, "notes": "Auto lock not enforced on all workstations."},
+    "PHY-007": {"status": "Partial", "evidence": false, "notes": "Old hard drives in storage; no destruction schedule."},
+    "PHY-008": {"status": "Not Implemented", "evidence": false, "notes": "No formal media sanitization policy."},
+    "PHY-009": {"status": "Not Implemented", "evidence": false, "alt_documented": false, "notes": "No tracking of removable media."},
+    "PHY-010": {"status": "Partial", "evidence": false, "notes": "Backups exist; no documented copy procedure."},
+    "TEC-001": {"status": "Partial", "evidence": false, "notes": "Front desk shares one EHR login at times."},
+    "TEC-002": {"status": "Not Implemented", "evidence": false, "notes": "No documented emergency access path."},
+    "TEC-003": {"status": "Partial", "evidence": false, "notes": "Some workstations auto lock; not enforced."},
+    "TEC-004": {"status": "Partial", "evidence": false, "alt_documented": false, "notes": "EHR encrypts at rest; backups not encrypted."},
+    "TEC-005": {"status": "Partial", "evidence": false, "notes": "EHR audit log retained 1 year only."},
+    "TEC-006": {"status": "Not Implemented", "evidence": false, "alt_documented": false, "notes": "No integrity verification beyond EHR vendor defaults."},
+    "TEC-007": {"status": "Not Implemented", "evidence": false, "notes": "Passwords only; MFA not enforced."},
+    "TEC-008": {"status": "Partial", "evidence": false, "alt_documented": false, "notes": "EHR portal uses TLS; internal email plain text."},
+    "TEC-009": {"status": "Partial", "evidence": false, "alt_documented": false, "notes": "Internal LAN unencrypted."}
+  },
+  "connector_findings": {
+    "manual_upload": {"source": "self_attestation", "documents_provided": ["risk_analysis_pdf", "employee_handbook"]}
+  },
+  "control_results": {
+    "overall": 38.5,
+    "band_label": "Major Gaps",
+    "category_scores": {"Administrative": 40.0, "Physical": 36.0, "Technical": 35.0},
+    "critical_gaps": [
+      {"control_id": "ADM-004", "status": "Not Implemented", "notes": "Audit logs unreviewed."},
+      {"control_id": "ADM-021", "status": "Not Implemented", "notes": "No periodic evaluation."},
+      {"control_id": "TEC-002", "status": "Not Implemented", "notes": "No emergency access procedure."},
+      {"control_id": "TEC-007", "status": "Not Implemented", "notes": "No MFA on EHR."}
+    ],
+    "high_gaps": [
+      {"control_id": "ADM-010", "status": "Not Implemented", "notes": "No periodic access review."},
+      {"control_id": "ADM-013", "status": "Not Implemented", "notes": "No login monitoring."},
+      {"control_id": "ADM-017", "status": "Not Implemented", "notes": "No DR plan."},
+      {"control_id": "PHY-008", "status": "Not Implemented", "notes": "No media sanitization policy."},
+      {"control_id": "TEC-001", "status": "Partial", "notes": "Shared front desk EHR login."}
+    ]
+  },
+  "baa_summary": {"total": 4, "ephi_vendors": 4, "missing_baas": 1, "expired": 0, "expiring_90d": 1},
+  "overlap_analysis": {"coverage_pct": 0.0, "full_overlap": 0, "partial_overlap": 0, "no_overlap": 42},
+  "expected_score_shape": {
+    "must_have_keys": ["gap_summary", "overall_risk_tier", "critical_gaps", "high_gaps", "quick_wins", "audit_exposure", "positive_findings"],
+    "min_critical_gaps": 3,
+    "risk_tier_in": ["CRITICAL", "HIGH"]
+  },
+  "expected_roadmap_shape": {
+    "must_have_keys": ["executive_summary", "overall_risk_tier", "phases", "quick_wins"],
+    "phases_count": 3,
+    "min_items_per_phase": 5,
+    "must_address_control_ids": ["TEC-007", "ADM-004"]
+  }
+}
