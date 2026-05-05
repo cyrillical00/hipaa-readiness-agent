@@ -9,10 +9,6 @@ US healthcare entity that handles protected health information.
 [![Python](https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green)](#license)
 
-![Gap Assessment with Meridian persona](docs/screenshots/gap_assessment_meridian.png)
-
-> Screenshots are TODO. Add `docs/screenshots/gap_assessment_meridian.png` (≈800px wide) once the demo personas land.
-
 ## What it does
 
 Scores 62 controls across all three HIPAA rules (Security, Privacy, Breach
