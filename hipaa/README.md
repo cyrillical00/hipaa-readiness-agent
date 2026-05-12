@@ -41,6 +41,38 @@ Three personas to explore (use any allow-listed email at the login gate):
 | **Brookline Cardiology** | Small Covered Entity | 25 | Strong Privacy Rule maturity, weaker Security Rule. The PHI weighting in the scorer downweights physical controls because ePHI does not leave the org. |
 | **Northeast Health Network** | Both, mature | 800 | SOC2 Type II Complete. Most controls Implemented. The interesting work is in Breach Notification, which a recent reorg left unclear. |
 
+## Screens
+
+Captured against the Meridian Health Tech persona at 1440x1000 viewport. Regenerate with `python hipaa/scripts/capture_screenshots.py` while the app runs locally.
+
+**Integrations and persona picker**
+
+![Integrations page with the demo persona dropdown selected](docs/screenshots/integrations_persona_picker.png)
+
+**Gap Assessment**
+
+Per-control scoring across all 62 controls, weighted by ePHI relevance, with an evidence upload slot inline.
+
+![Gap Assessment page showing scored controls for Meridian Health Tech](docs/screenshots/gap_assessment_meridian.png)
+
+**BAA Tracker**
+
+Vendor inventory with risk classification and Claude-generated outreach drafts for the gaps.
+
+![BAA Tracker page listing Meridian vendors with risk and outreach status](docs/screenshots/baa_tracker_meridian.png)
+
+**Remediation Roadmap**
+
+Three-phase plan from the Claude refine loop, with re-assess diff and docx export.
+
+![Remediation Roadmap page in its initial state for Meridian](docs/screenshots/roadmap_meridian.png)
+
+**History**
+
+Past assessments per user, audit trail, today's spend against the role's daily cap.
+
+![History page showing assessment history and audit log](docs/screenshots/history.png)
+
 ## How it works
 
 ### Architecture

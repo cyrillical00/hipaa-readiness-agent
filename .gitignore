@@ -1,0 +1,4 @@
+# Repo-root ignores; per-subproject patterns live in hipaa/.gitignore.
+*.log
+.DS_Store
+__pycache__/
