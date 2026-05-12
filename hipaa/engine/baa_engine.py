@@ -1,8 +1,12 @@
 """
 BAA inventory risk classification logic.
 """
+import os
 from datetime import datetime, date, timedelta
+from pathlib import Path
 from typing import Any
+
+TEMPLATES_DIR = Path(__file__).resolve().parent.parent / "data" / "baa_templates"
 
 
 RISK_COLORS = {
@@ -121,3 +125,88 @@ def baa_summary(enriched_baas: list[dict]) -> dict:
             (len(ephi_vendors) - missing) / len(ephi_vendors) * 100 if ephi_vendors else 100, 1
         ),
     }
+
+
+def list_templates() -> list[dict]:
+    """Returns [{key, name, path, body}, ...] for every .md file in baa_templates/."""
+    if not TEMPLATES_DIR.exists():
+        return []
+    out = []
+    for p in sorted(TEMPLATES_DIR.glob("*.md")):
+        out.append({
+            "key": p.stem,
+            "name": p.stem.replace("_", " ").title(),
+            "path": str(p),
+            "body": p.read_text(encoding="utf-8"),
+        })
+    return out
+
+
+def fill_template(template_body: str, fields: dict) -> str:
+    """Substitute {curly_brace} fields. Missing keys leave the placeholder intact."""
+    out = template_body
+    for k, v in fields.items():
+        out = out.replace("{" + k + "}", str(v))
+    return out
+
+
+def draft_outreach_email(
+    vendor_name: str,
+    risk_tier: str,
+    ephi_scope: str,
+    requester_org: str,
+    requester_name: str,
+    template_key: str = "saas_vendor",
+) -> str:
+    """Refines a starter template into a vendor-specific draft via Haiku.
+
+    Falls back to the deterministic filled template when Claude is unavailable
+    so the page still functions without an API key.
+    """
+    from engine.claude_client import ClaudeWrapper
+
+    templates = {t["key"]: t for t in list_templates()}
+    base = templates.get(template_key) or templates.get("saas_vendor")
+    if not base:
+        return "No templates available."
+
+    seed = fill_template(base["body"], {
+        "vendor_name": vendor_name,
+        "risk_tier": risk_tier,
+        "ephi_scope": ephi_scope,
+        "requester_org": requester_org,
+        "requester_name": requester_name,
+        "service_description": "your service",
+        "target_weeks": "4",
+    })
+
+    system_prompt = (
+        "You are a HIPAA compliance officer drafting outreach emails to vendors "
+        "that need a Business Associate Agreement. You receive a starter draft "
+        "and adapt it to be specific, professional, and concise. Keep CFR "
+        "citations and the structure intact. Reply with the email body only, "
+        "no JSON, no markdown fences, no preamble. Never use em dash characters; "
+        "use commas, semicolons, or rewrite the sentence."
+    )
+    user_prompt = (
+        f"Vendor: {vendor_name}\n"
+        f"Their service for us: {ephi_scope}\n"
+        f"Risk tier: {risk_tier}\n\n"
+        f"Starter draft:\n___\n{seed}\n___\n\n"
+        f"Refine into a final email body. Be specific about why this vendor "
+        f"needs a BAA given their service. Keep it under 250 words."
+    )
+
+    try:
+        wrapper = ClaudeWrapper(model="claude-haiku-4-5-20251001")
+        json_system = (
+            system_prompt
+            + ' Wrap your output as JSON: {"body": "<email body>"}.'
+        )
+        parsed, _usage = wrapper.stream_json(
+            json_system, user_prompt, max_tokens=1500,
+            progress_label="baa_outreach_draft",
+        )
+        return parsed.get("body", seed)
+    except Exception:
+        return seed

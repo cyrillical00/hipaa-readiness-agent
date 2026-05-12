@@ -4,6 +4,18 @@ Required vs Addressable scoring with gap classification.
 """
 from typing import Any
 
+from engine.phi_classifier import get_control_weight
+
+try:
+    from storage.evidence import evidence_count_by_control
+except Exception:
+    evidence_count_by_control = None
+
+try:
+    from auth.login import get_current_user_or_none
+except Exception:
+    get_current_user_or_none = None
+
 
 REQUIRED_SCORES = {
     "Implemented": 100,
@@ -34,12 +46,30 @@ READINESS_BANDS = [
 ]
 
 
-def score_control(control: dict, assessment: dict) -> dict:
+def _evidence_counts_for_current_user() -> dict:
+    if evidence_count_by_control is None or get_current_user_or_none is None:
+        return {}
+    try:
+        user = get_current_user_or_none()
+    except Exception:
+        user = None
+    if not user:
+        return {}
+    try:
+        result = evidence_count_by_control(user) or {}
+        return result if isinstance(result, dict) else {}
+    except Exception:
+        return {}
+
+
+def score_control(control: dict, assessment: dict, evidence_counts: dict | None = None) -> dict:
     """Score a single control and return score + gap tier."""
     ctrl_id = control["id"]
     status_entry = assessment.get(ctrl_id, {})
     status = status_entry.get("status", "Not Implemented")
-    evidence = status_entry.get("evidence", False)
+    raw_evidence = status_entry.get("evidence", False)
+    repo_count = (evidence_counts or {}).get(ctrl_id, 0)
+    evidence = bool(raw_evidence) or (repo_count > 0)
     alt_documented = status_entry.get("alt_documented", None)
 
     if control["status"] == "Required":
@@ -51,7 +81,6 @@ def score_control(control: dict, assessment: dict) -> dict:
         else:
             gap_tier = "LOW" if evidence else "MEDIUM"
     else:
-        # Addressable
         if status == "Not Implemented":
             score = ADDRESSABLE_SCORES["Not Implemented"] if not alt_documented else 70
             gap_tier = "HIGH" if not alt_documented else "MEDIUM"
@@ -68,36 +97,50 @@ def score_control(control: dict, assessment: dict) -> dict:
         "gap_tier": gap_tier,
         "status": status,
         "evidence": evidence,
+        "evidence_count": repo_count,
         "alt_documented": alt_documented,
         "notes": status_entry.get("notes", ""),
     }
 
 
-def compute_readiness(controls: list[dict], assessment: dict) -> dict:
-    """Compute overall and per-category readiness scores."""
-    results = [score_control(c, assessment) for c in controls]
+def compute_readiness(
+    controls: list[dict],
+    assessment: dict,
+    org_context: dict | None = None,
+) -> dict:
+    """Compute overall and per-category readiness scores, weighted by ePHI relevance."""
+    evidence_counts = _evidence_counts_for_current_user()
+    org_context = org_context or {}
+
+    results = [score_control(c, assessment, evidence_counts) for c in controls]
     score_map = {r["control_id"]: r for r in results}
+    control_map = {c["id"]: c for c in controls}
+    weight_map = {c["id"]: get_control_weight(c, org_context) for c in controls}
 
-    categories = ["Administrative", "Physical", "Technical"]
-    cat_scores = {}
-
-    for cat in categories:
-        cat_controls = [c for c in controls if c["safeguard"] == cat]
+    cat_scores: dict[str, float] = {}
+    safeguards = sorted({c.get("safeguard", "Other") for c in controls})
+    for cat in safeguards:
+        cat_controls = [c for c in controls if c.get("safeguard") == cat]
         cat_results = [score_map[c["id"]] for c in cat_controls if c["id"] in score_map]
         if cat_results:
-            cat_scores[cat] = sum(r["score"] for r in cat_results) / len(cat_results)
+            num = sum(r["score"] * weight_map[r["control_id"]] for r in cat_results)
+            den = sum(weight_map[r["control_id"]] for r in cat_results) or 1.0
+            cat_scores[cat] = num / den
         else:
             cat_scores[cat] = 0
 
-    overall = sum(r["score"] for r in results) / len(results) if results else 0
+    if results:
+        total_num = sum(r["score"] * weight_map[r["control_id"]] for r in results)
+        total_den = sum(weight_map[r["control_id"]] for r in results) or 1.0
+        overall = total_num / total_den
+    else:
+        overall = 0
 
     critical_gaps = [r for r in results if r["gap_tier"] == "CRITICAL"]
     high_gaps = [r for r in results if r["gap_tier"] == "HIGH"]
     medium_gaps = [r for r in results if r["gap_tier"] == "MEDIUM"]
     low_gaps = [r for r in results if r["gap_tier"] == "LOW"]
 
-    # Quick wins: medium/high gaps with low remediation effort
-    control_map = {c["id"]: c for c in controls}
     quick_wins = [
         r for r in (high_gaps + medium_gaps)
         if control_map.get(r["control_id"], {}).get("remediation_effort") == "Low"

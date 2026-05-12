@@ -34,7 +34,15 @@
     "TEC-005": {"status": "Not Implemented", "evidence": false, "notes": "No audit logging."},
     "TEC-007": {"status": "Not Implemented", "evidence": false, "notes": "No MFA enforced."},
     "TEC-004": {"status": "Not Implemented", "evidence": false, "alt_documented": false, "notes": "No encryption at rest."},
-    "TEC-008": {"status": "Not Implemented", "evidence": false, "alt_documented": false, "notes": "TLS not enforced."}
+    "TEC-008": {"status": "Not Implemented", "evidence": false, "alt_documented": false, "notes": "TLS not enforced."},
+    "PRV-001": {"status": "Not Implemented", "evidence": false, "notes": "No Notice of Privacy Practices."},
+    "PRV-007": {"status": "Not Implemented", "evidence": false, "notes": "No minimum necessary policy."},
+    "PRV-008": {"status": "Not Implemented", "evidence": false, "notes": "No authorization template or process."},
+    "PRV-012": {"status": "Not Implemented", "evidence": false, "notes": "No Privacy Officer designated."},
+    "PRV-013": {"status": "Not Implemented", "evidence": false, "notes": "No Privacy training program."},
+    "BRN-001": {"status": "Not Implemented", "evidence": false, "notes": "No four factor breach risk assessment."},
+    "BRN-005": {"status": "Not Implemented", "evidence": false, "notes": "No BA breach notification procedure."},
+    "BRN-007": {"status": "Not Implemented", "evidence": false, "notes": "No breach response plan."}
   },
   "connector_findings": {},
   "control_results": {
@@ -59,13 +67,13 @@
   "overlap_analysis": {"coverage_pct": 0.0, "full_overlap": 0, "partial_overlap": 0, "no_overlap": 42},
   "expected_score_shape": {
     "must_have_keys": ["gap_summary", "overall_risk_tier", "critical_gaps", "high_gaps", "quick_wins", "audit_exposure", "positive_findings"],
-    "min_critical_gaps": 5,
+    "min_critical_gaps": 7,
     "risk_tier_in": ["CRITICAL"]
   },
   "expected_roadmap_shape": {
     "must_have_keys": ["executive_summary", "overall_risk_tier", "phases", "quick_wins"],
     "phases_count": 3,
-    "min_items_per_phase": 5,
-    "must_address_control_ids": ["ADM-022", "ADM-005"]
+    "min_items_per_phase": 6,
+    "must_address_control_ids": ["ADM-022", "ADM-005", "PRV-012", "BRN-007"]
   }
 }

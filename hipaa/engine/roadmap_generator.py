@@ -153,6 +153,31 @@ def generate_roadmap(
     return parsed
 
 
+def generate_roadmap_refined(
+    control_results: dict,
+    controls: list[dict],
+    baa_summary: dict,
+    overlap_analysis: dict,
+    org_context: dict,
+    stream_placeholder=None,
+    max_passes: int = 3,
+    on_pass=None,
+):
+    """Wraps generate_roadmap with the validator+fixer loop. Returns RefineResult."""
+    from engine.refine import generate_with_refine
+    critical_gaps = control_results.get("critical_gaps", [])
+    high_gaps = control_results.get("high_gaps", [])
+    return generate_with_refine(
+        generator_fn=generate_roadmap,
+        generator_args=(control_results, controls, baa_summary, overlap_analysis, org_context, stream_placeholder),
+        controls=controls,
+        critical_gaps=critical_gaps,
+        high_gaps=high_gaps,
+        max_passes=max_passes,
+        on_pass=on_pass,
+    )
+
+
 def score_assessment_with_claude(
     control_statuses: dict,
     controls: list[dict],

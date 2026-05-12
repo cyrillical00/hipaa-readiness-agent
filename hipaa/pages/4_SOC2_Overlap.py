@@ -10,6 +10,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 from engine.soc2_crosswalk import load_crosswalk, compute_overlap
 from engine.control_mapper import load_controls
+from auth.login import require_login
+require_login()
 
 st.set_page_config(page_title="SOC2 Overlap — HIPAA Agent", layout="wide")
 st.markdown("# SOC2 → HIPAA Control Overlap")

@@ -13,7 +13,7 @@ class HIPAAReportPDF(FPDF):
     def header(self):
         self.set_font("Helvetica", "B", 10)
         self.set_text_color(99, 102, 241)  # Indigo
-        self.cell(0, 8, f"HIPAA Readiness Assessment — {self.org_name}", align="L")
+        self.cell(0, 8, f"HIPAA Readiness Assessment: {self.org_name}", align="L")
         self.set_font("Helvetica", "", 8)
         self.set_text_color(150, 150, 150)
         self.cell(0, 8, f"Generated {date.today().isoformat()}", align="R")
@@ -26,7 +26,7 @@ class HIPAAReportPDF(FPDF):
         self.set_y(-15)
         self.set_font("Helvetica", "I", 8)
         self.set_text_color(150, 150, 150)
-        self.cell(0, 10, f"Page {self.page_no()} — Confidential", align="C")
+        self.cell(0, 10, f"Page {self.page_no()} · Confidential", align="C")
 
     def section_title(self, title: str):
         self.set_font("Helvetica", "B", 13)
@@ -57,7 +57,7 @@ def generate_assessment_pdf(
     score = readiness.get("overall", 0)
     band = readiness.get("band_label", "Unknown")
     pdf.body_text(
-        f"Overall HIPAA Readiness Score: {score:.1f}% — {band}\n"
+        f"Overall HIPAA Readiness Score: {score:.1f}% · {band}\n"
         f"Assessment Date: {date.today().isoformat()}\n"
         f"Entity Type: {org_context.get('entity_type', 'N/A')}\n"
         f"SOC2 Status: {org_context.get('soc2_status', 'None')}\n"
@@ -81,8 +81,11 @@ def generate_assessment_pdf(
         ctrl_map = {c["id"]: c for c in controls}
         for gap in critical:
             c = ctrl_map.get(gap["control_id"], {})
+            ref = gap["control_id"]
+            if c.get("cfr_citation"):
+                ref = f"{gap['control_id']} ({c['cfr_citation']})"
             pdf.body_text(
-                f"• {gap['control_id']} — {c.get('spec', '')} [{c.get('standard', '')}]\n"
+                f"- {ref}: {c.get('spec', '')} [{c.get('standard', '')}]\n"
                 f"  Status: {gap['status']} | Notes: {gap.get('notes', 'N/A')}"
             )
 

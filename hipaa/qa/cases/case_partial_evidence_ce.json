@@ -52,7 +52,15 @@
     "TEC-006": {"status": "Not Implemented", "evidence": false, "alt_documented": false, "notes": "No integrity verification beyond EHR vendor defaults."},
     "TEC-007": {"status": "Not Implemented", "evidence": false, "notes": "Passwords only; MFA not enforced."},
     "TEC-008": {"status": "Partial", "evidence": false, "alt_documented": false, "notes": "EHR portal uses TLS; internal email plain text."},
-    "TEC-009": {"status": "Partial", "evidence": false, "alt_documented": false, "notes": "Internal LAN unencrypted."}
+    "TEC-009": {"status": "Partial", "evidence": false, "alt_documented": false, "notes": "Internal LAN unencrypted."},
+    "PRV-001": {"status": "Implemented", "evidence": true, "notes": "Notice of Privacy Practices posted in waiting area and on website."},
+    "PRV-002": {"status": "Partial", "evidence": false, "notes": "Patient access requests honored ad hoc; no 30 day procedure tracked."},
+    "PRV-007": {"status": "Partial", "evidence": false, "notes": "EHR roles loosely scoped; no documented minimum necessary protocol for routine requests."},
+    "PRV-012": {"status": "Implemented", "evidence": true, "notes": "Practice Manager designated as Privacy Officer."},
+    "PRV-013": {"status": "Partial", "evidence": false, "notes": "HIPAA Privacy training at hire only; no annual refresh."},
+    "BRN-001": {"status": "Not Implemented", "evidence": false, "notes": "No four factor breach risk assessment template."},
+    "BRN-002": {"status": "Not Implemented", "evidence": false, "notes": "No individual breach notification template."},
+    "BRN-007": {"status": "Not Implemented", "evidence": false, "notes": "No breach response plan; reliant on EHR vendor for incident handling."}
   },
   "connector_findings": {
     "manual_upload": {"source": "self_attestation", "documents_provided": ["risk_analysis_pdf", "employee_handbook"]}
@@ -79,13 +87,13 @@
   "overlap_analysis": {"coverage_pct": 0.0, "full_overlap": 0, "partial_overlap": 0, "no_overlap": 42},
   "expected_score_shape": {
     "must_have_keys": ["gap_summary", "overall_risk_tier", "critical_gaps", "high_gaps", "quick_wins", "audit_exposure", "positive_findings"],
-    "min_critical_gaps": 3,
+    "min_critical_gaps": 4,
     "risk_tier_in": ["CRITICAL", "HIGH"]
   },
   "expected_roadmap_shape": {
     "must_have_keys": ["executive_summary", "overall_risk_tier", "phases", "quick_wins"],
     "phases_count": 3,
-    "min_items_per_phase": 5,
-    "must_address_control_ids": ["TEC-007", "ADM-004"]
+    "min_items_per_phase": 6,
+    "must_address_control_ids": ["TEC-007", "ADM-004", "PRV-013", "BRN-007"]
   }
 }

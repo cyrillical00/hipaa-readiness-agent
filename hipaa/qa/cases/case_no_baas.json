@@ -52,7 +52,15 @@
     "TEC-006": {"status": "Partial", "evidence": false, "notes": "No documented integrity verification."},
     "TEC-007": {"status": "Implemented", "evidence": true, "notes": "Okta MFA enforced."},
     "TEC-008": {"status": "Implemented", "evidence": true, "notes": "TLS 1.2 plus enforced."},
-    "TEC-009": {"status": "Partial", "evidence": false, "alt_documented": false, "notes": "Email TLS unverified."}
+    "TEC-009": {"status": "Partial", "evidence": false, "alt_documented": false, "notes": "Email TLS unverified."},
+    "PRV-001": {"status": "Not Implemented", "evidence": false, "notes": "No Notice of Privacy Practices; BA dependency on CE NPP undocumented."},
+    "PRV-005": {"status": "N/A (Documented)", "evidence": false, "notes": "BAA references restriction handling; no internal record."},
+    "PRV-007": {"status": "Not Implemented", "evidence": false, "notes": "No minimum necessary policy; analysts query full claims data."},
+    "PRV-012": {"status": "Not Implemented", "evidence": false, "notes": "No Privacy Officer designated."},
+    "PRV-013": {"status": "Not Implemented", "evidence": false, "notes": "No Privacy Rule training."},
+    "BRN-001": {"status": "Not Implemented", "evidence": false, "notes": "No four factor breach risk assessment template."},
+    "BRN-005": {"status": "Not Implemented", "evidence": false, "notes": "No BA to CE breach notification procedure; missing BAAs make this a critical gap."},
+    "BRN-007": {"status": "Not Implemented", "evidence": false, "notes": "No breach response plan."}
   },
   "connector_findings": {
     "okta": {"mfa_enforced": true, "unique_user_ids": true, "auto_logoff_minutes": 5, "password_policy_strong": true, "audit_log_retention_days": 90, "active_user_count": 28, "admin_group_count": 2, "inactive_users_count": 0, "device_trust_enabled": true},
@@ -77,13 +85,13 @@
   "overlap_analysis": {"coverage_pct": 28.0, "full_overlap": 3, "partial_overlap": 9, "no_overlap": 30},
   "expected_score_shape": {
     "must_have_keys": ["gap_summary", "overall_risk_tier", "critical_gaps", "high_gaps", "quick_wins", "audit_exposure", "positive_findings"],
-    "min_critical_gaps": 2,
+    "min_critical_gaps": 4,
     "risk_tier_in": ["CRITICAL", "HIGH"]
   },
   "expected_roadmap_shape": {
     "must_have_keys": ["executive_summary", "overall_risk_tier", "phases", "quick_wins"],
     "phases_count": 3,
-    "min_items_per_phase": 5,
-    "must_address_control_ids": ["ADM-022"]
+    "min_items_per_phase": 6,
+    "must_address_control_ids": ["ADM-022", "BRN-005", "BRN-007"]
   }
 }

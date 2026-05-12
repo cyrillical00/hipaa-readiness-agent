@@ -52,7 +52,15 @@
     "TEC-006": {"status": "Implemented", "evidence": true, "notes": "Integrity verification via checksums and signed exports."},
     "TEC-007": {"status": "Implemented", "evidence": true, "notes": "MFA via WebAuthn enforced."},
     "TEC-008": {"status": "Implemented", "evidence": true, "notes": "TLS 1.3 enforced everywhere."},
-    "TEC-009": {"status": "Partial", "evidence": false, "alt_documented": false, "notes": "Email TLS confirmed inbound; outbound not yet enforced."}
+    "TEC-009": {"status": "Partial", "evidence": false, "alt_documented": false, "notes": "Email TLS confirmed inbound; outbound not yet enforced."},
+    "PRV-001": {"status": "Implemented", "evidence": true, "notes": "NPP coverage documented through CE BAAs; internal addendum maintained."},
+    "PRV-005": {"status": "N/A (Documented)", "evidence": true, "notes": "Privacy obligations flow through CE contracts."},
+    "PRV-007": {"status": "Implemented", "evidence": true, "notes": "Lumos governance enforces minimum necessary on PHI tables."},
+    "PRV-012": {"status": "Implemented", "evidence": true, "notes": "Privacy Officer formally appointed; reports to CISO."},
+    "PRV-013": {"status": "Implemented", "evidence": true, "notes": "Annual Privacy Rule training tracked in LMS with retraining on policy changes."},
+    "BRN-001": {"status": "Implemented", "evidence": true, "notes": "Four factor breach risk assessment template integrated into incident playbook."},
+    "BRN-005": {"status": "Implemented", "evidence": true, "notes": "BA to CE notification procedure documented with 24 hour internal SLA."},
+    "BRN-007": {"status": "Implemented", "evidence": true, "notes": "Standalone breach response plan tested annually via tabletop."}
   },
   "connector_findings": {
     "okta": {"mfa_enforced": true, "unique_user_ids": true, "auto_logoff_minutes": 10, "password_policy_strong": true, "audit_log_retention_days": 365, "active_user_count": 395, "admin_group_count": 5, "inactive_users_count": 2, "device_trust_enabled": true},
@@ -78,7 +86,7 @@
   "expected_roadmap_shape": {
     "must_have_keys": ["executive_summary", "overall_risk_tier", "phases", "quick_wins"],
     "phases_count": 3,
-    "min_items_per_phase": 5,
+    "min_items_per_phase": 6,
     "must_address_control_ids": ["PHY-009"]
   }
 }
