@@ -134,9 +134,12 @@ clinic with paper records is not flattered by strong cloud encryption.
 ### Persistence and RBAC
 
 Per-user JSONL files live under `.streamlit/state` by default, one stream per
-record kind (assessments, evidence, audit, spend). Optional GitHub-backed storage
-swaps in when `HIPAA_STATE_REPO` and `HIPAA_STATE_PAT` are set, which is how
-shared deployments keep state across restarts. Roles are defined in
+record kind (assessments, evidence, audit, spend). For shared deployments,
+GitHub-backed storage swaps in when `HIPAA_STATE_REPO` and `HIPAA_STATE_PAT`
+are set; every read and append then goes through the GitHub Contents API to
+the configured private repo, mirroring the local path layout. API failures
+raise instead of silently falling back, so misconfigured secrets surface
+immediately. See `storage/README.md` for details. Roles are defined in
 `auth/roles.json` with daily spend caps enforced before every Claude call:
 admin unlimited, editor $10/day, contributor $2/day, viewer $0/day (read-only).
 
@@ -221,8 +224,8 @@ Open http://localhost:8501 and pick `Meridian Health Tech` from the persona sele
 |---|---|---|
 | `ANTHROPIC_API_KEY` | Yes | Claude calls (assessment, roadmap, validator, fixer, BAA drafts) |
 | `local_allowed_emails` | Local dev only | Emails allowed past the local login gate (Cloud uses Google OAuth) |
-| `HIPAA_STATE_REPO` | Optional | GitHub repo for shared persistence (defaults to local disk) |
-| `HIPAA_STATE_PAT` | Optional | PAT with `repo` scope on the state repo |
+| `HIPAA_STATE_REPO` | Optional | `owner/repo` of a private GitHub repo for shared JSONL persistence. Default branch must exist. Defaults to local disk if unset. |
+| `HIPAA_STATE_PAT` | Optional | Fine-grained PAT with **Contents: Read and write** scoped to the state repo. Required alongside `HIPAA_STATE_REPO`. |
 
 ## Testing
 
@@ -253,11 +256,11 @@ Each case asserts the JSON shape of both Claude calls and runs the validator on 
 | 6 Persistence plus RBAC plus audit log | shipped | PR #2 |
 | 7 CFR citations plus Privacy and Breach plus evidence vault | shipped | PR #3 |
 | 8 Refine loop plus roadmap progress plus BAA outreach | shipped | PR #4 |
-| 9 docx export plus demo personas plus portfolio polish | shipped | this PR |
+| 9 docx export plus demo personas plus portfolio polish | shipped | PR #5 |
+| 6.5 GitHub-backed JSONL state via Contents API | shipped | this PR |
 
 Future:
 
-- Wire GitHub-backed JSONL state for shared deployments end-to-end
 - Continuous monitoring via scheduled re-assessment (cron)
 - Webhook to Slack on critical control regression
 
