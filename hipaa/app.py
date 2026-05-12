@@ -19,6 +19,7 @@ st.set_page_config(
 
 from auth.login import require_login, get_role, get_auth_mode
 from data.demo_orgs.personas import PERSONAS, get_persona, list_personas
+from engine.baa_engine import enrich_baa_list
 current_user = require_login()
 current_role = get_role(current_user)
 st.session_state["current_user"] = current_user
@@ -117,7 +118,7 @@ with st.sidebar:
             for k, v in persona["org_context"].items():
                 st.session_state[k] = v
             st.session_state["control_statuses"] = persona["control_statuses"]
-            st.session_state["baa_list"] = persona["baa_list"]
+            st.session_state["baa_list"] = enrich_baa_list(persona["baa_list"])
             if persona.get("assessment_results"):
                 st.session_state["readiness_results"] = persona["assessment_results"]
                 st.session_state["assessment_run"] = True
