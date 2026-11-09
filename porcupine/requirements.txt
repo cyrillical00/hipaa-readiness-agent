@@ -1,6 +1,6 @@
 typer[all]==0.12.3
 rich==13.7.1
-litellm==1.95.0
+litellm==1.100.4
 py-clob-client==0.20.0
 supabase==2.11.0
 keyring==25.2.1
