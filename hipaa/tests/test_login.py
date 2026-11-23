@@ -213,6 +213,37 @@ class RequireLoginTests(unittest.TestCase):
         self.assertEqual(fake.rendered, [])
 
 
+class RoleTests(unittest.TestCase):
+    def _role(self, email, secrets=None):
+        with mock.patch.object(login, "st", _FakeStreamlit(secrets=secrets or {})):
+            return login.get_role(email)
+
+    def test_nobody_is_privileged_by_the_repository(self):
+        import json
+
+        with open(HIPAA_ROOT / "auth" / "roles.json", encoding="utf-8") as fh:
+            data = json.load(fh)
+        self.assertEqual(data["default_role"], "viewer")
+        self.assertEqual(data["users"], {})
+        self.assertEqual(self._role("anyone@example.org"), "viewer")
+
+    def test_roles_come_from_the_roles_secret(self):
+        secrets = {"roles": {"Lead@Example.org": "admin", "pat@example.org": "editor"}}
+        self.assertEqual(self._role("lead@example.org", secrets), "admin")
+        self.assertEqual(self._role("LEAD@example.org", secrets), "admin")
+        self.assertEqual(self._role("pat@example.org", secrets), "editor")
+        self.assertEqual(self._role("lee@example.org", secrets), "viewer")
+        with mock.patch.object(login, "st", _FakeStreamlit(secrets=secrets)):
+            self.assertTrue(login.is_admin("lead@example.org"))
+            self.assertFalse(login.is_admin("pat@example.org"))
+
+    def test_unknown_role_names_and_bad_secrets_fall_back_to_the_default(self):
+        self.assertEqual(self._role("pat@example.org", {"roles": {"pat@example.org": "owner"}}), "viewer")
+        self.assertEqual(self._role("pat@example.org", {"roles": "admin"}), "viewer")
+        self.assertEqual(self._role("pat@example.org", {"roles": ["pat@example.org"]}), "viewer")
+        self.assertEqual(self._role("", {"roles": {"": "admin"}}), "viewer")
+
+
 class RealStreamlitGateTest(unittest.TestCase):
     """Run the real entry point under Streamlit's test harness with nobody signed in."""
 

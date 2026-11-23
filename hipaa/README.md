@@ -142,6 +142,9 @@ raise instead of silently falling back, so misconfigured secrets surface
 immediately. See `storage/README.md` for details. Roles are defined in
 `auth/roles.json` with daily spend caps enforced before every Claude call:
 admin unlimited, editor $10/day, contributor $2/day, viewer $0/day (read-only).
+Who holds which role is set per address in the `[roles]` table of the
+deployment's secrets; `auth/roles.json` in the repository only sets the
+default role.
 
 ## What's included
 
@@ -229,6 +232,7 @@ asks for a real sign-in. Never rely on it for a shared deployment.
 |---|---|---|
 | `ANTHROPIC_API_KEY` | Yes | Claude calls (assessment, roadmap, validator, fixer, BAA drafts) |
 | `[auth]` | Yes, for any deployment | Streamlit OIDC sign-in settings (`redirect_uri`, `cookie_secret`, `client_id`, `client_secret`, `server_metadata_url`). The login gate admits only identities this provider vouches for. |
+| `[roles]` | Optional | Role per address, for example `"admin@example.com" = "admin"`. Anyone not listed is a viewer. |
 | `allowed_emails` | Optional | Signed-in addresses allowed past the gate. When unset, any account the provider signs in is admitted as a viewer. |
 | `HIPAA_DEV_LOGIN_EMAIL` (environment) | Local dev only | Signs you in as this address when the server runs with `--server.address localhost`. Ignored otherwise. |
 | `HIPAA_STATE_REPO` | Optional | `owner/repo` of a private GitHub repo for shared JSONL persistence. Default branch must exist. Defaults to local disk if unset. |

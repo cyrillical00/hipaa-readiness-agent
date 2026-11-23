@@ -150,13 +150,34 @@ def get_current_user_or_none():
     return _dev_login_email()
 
 
+def _secret_roles() -> dict:
+    """Role assignments from the [roles] secret as {lower-cased email: role}. Never raises."""
+    if st is None:
+        return {}
+    try:
+        raw = st.secrets.get("roles", None)
+        return {str(k).strip().lower(): v for k, v in dict(raw or {}).items()}
+    except Exception:
+        return {}
+
+
 def get_role(email: str) -> str:
-    """Returns role string for an email; default_role if unknown."""
+    """Returns role string for an email; default_role if unknown.
+
+    Assignments live in the deployment's [roles] secret so that real addresses
+    stay out of the repository. Entries in roles.json are still honoured, and
+    the secret wins where both name the same address.
+    """
     data = _load_roles()
     default_role = data.get("default_role", "viewer")
     if not email or not isinstance(email, str):
         return default_role
-    role = data.get("users", {}).get(email, default_role)
+    users = {}
+    file_users = data.get("users", {})
+    if isinstance(file_users, dict):
+        users.update({str(k).strip().lower(): v for k, v in file_users.items()})
+    users.update(_secret_roles())
+    role = users.get(email.strip().lower(), default_role)
     if role not in _VALID_ROLES:
         return default_role
     return role
