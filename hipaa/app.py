@@ -82,15 +82,13 @@ for k, v in DEFAULTS.items():
 # ── Sidebar — org context ─────────────────────────────────────────────────────
 with st.sidebar:
     st.caption(f"Logged in as {current_user} [{current_role}]")
-    if st.button("Logout", key="logout_btn"):
-        if get_auth_mode() == "cloud":
-            st.session_state["force_logout"] = True
-            try:
-                st.logout()
-            except Exception:
-                pass
-        else:
-            st.session_state.pop("local_login_email", None)
+    # The developer login has no session to end, so only offer this for a real sign-in.
+    if get_auth_mode() == "cloud" and st.button("Logout", key="logout_btn"):
+        st.session_state["force_logout"] = True
+        try:
+            st.logout()
+        except Exception:
+            pass
         st.rerun()
     st.divider()
     st.markdown("## 🏥 HIPAA Readiness Agent")

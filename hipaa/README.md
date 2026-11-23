@@ -33,7 +33,7 @@ on every Claude call.
 
 [hipaa-readiness.streamlit.app](https://hipaa-readiness.streamlit.app)
 
-Three personas to explore (use any allow-listed email at the login gate):
+Three personas to explore once you are signed in:
 
 | Persona | Type | Workforce | What to look at |
 |---|---|---|---|
@@ -203,18 +203,23 @@ git clone https://github.com/cyrillical00/hipaa-readiness-agent
 cd hipaa-readiness-agent/hipaa
 pip install -r requirements.txt
 cp .streamlit/secrets.toml.example .streamlit/secrets.toml
-# add your ANTHROPIC_API_KEY
-streamlit run app.py
+# add your ANTHROPIC_API_KEY, and either fill in or delete the [auth] section
+HIPAA_DEV_LOGIN_EMAIL=dev@example.com streamlit run app.py --server.address localhost
 ```
 
 Open http://localhost:8501 and pick `Meridian Health Tech` from the persona selector.
+
+The app has no anonymous mode. `HIPAA_DEV_LOGIN_EMAIL` signs you in as that
+address for local development, and only while the server is bound to
+`localhost`; on any other address the variable is ignored and the login gate
+asks for a real sign-in. Never rely on it for a shared deployment.
 
 ### Deploy to Streamlit Community Cloud
 
 1. Fork this repo.
 2. Sign in at https://share.streamlit.io.
 3. Click `New app`, point at your fork, set the main file to `hipaa/app.py`.
-4. Under `Settings`, then `Secrets`, paste the contents of `.streamlit/secrets.toml.example` and fill in real values for `ANTHROPIC_API_KEY` and `local_allowed_emails`.
+4. Under `Settings`, then `Secrets`, paste the contents of `.streamlit/secrets.toml.example` and fill in real values for `ANTHROPIC_API_KEY` and the `[auth]` section (an OIDC client from Google, Microsoft, Okta or another provider, with `<your app URL>/oauth2callback` registered as its redirect URI). Without `[auth]` nobody can get past the login gate. Set `allowed_emails` if only named people should get in.
 5. Click Deploy. First boot installs requirements (~2 minutes).
 6. The docx export works out of the box. Optional PDF download requires LibreOffice (`soffice`) on the host. Streamlit Community Cloud does not preinstall it, so the PDF button is hidden there. To enable PDF, deploy on a host with `soffice` on the PATH (Render, Railway, or your own server with `apt install libreoffice`).
 
@@ -223,7 +228,9 @@ Open http://localhost:8501 and pick `Meridian Health Tech` from the persona sele
 | Key | Required? | Purpose |
 |---|---|---|
 | `ANTHROPIC_API_KEY` | Yes | Claude calls (assessment, roadmap, validator, fixer, BAA drafts) |
-| `local_allowed_emails` | Local dev only | Emails allowed past the local login gate (Cloud uses Google OAuth) |
+| `[auth]` | Yes, for any deployment | Streamlit OIDC sign-in settings (`redirect_uri`, `cookie_secret`, `client_id`, `client_secret`, `server_metadata_url`). The login gate admits only identities this provider vouches for. |
+| `allowed_emails` | Optional | Signed-in addresses allowed past the gate. When unset, any account the provider signs in is admitted as a viewer. |
+| `HIPAA_DEV_LOGIN_EMAIL` (environment) | Local dev only | Signs you in as this address when the server runs with `--server.address localhost`. Ignored otherwise. |
 | `HIPAA_STATE_REPO` | Optional | `owner/repo` of a private GitHub repo for shared JSONL persistence. Default branch must exist. Defaults to local disk if unset. |
 | `HIPAA_STATE_PAT` | Optional | Fine-grained PAT with **Contents: Read and write** scoped to the state repo. Required alongside `HIPAA_STATE_REPO`. |
 
