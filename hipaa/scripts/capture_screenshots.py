@@ -8,15 +8,15 @@ Prereqs:
     playwright install chromium
 
 Run:
-    # In one shell, start the app:
-    cd hipaa && streamlit run app.py
+    # In one shell, start the app with the local developer login:
+    cd hipaa && HIPAA_DEV_LOGIN_EMAIL=demo@hipaa.example \
+        streamlit run app.py --server.address localhost
 
     # In another shell, run the capture (Meridian persona, 5 PNGs):
     python hipaa/scripts/capture_screenshots.py
 
-The login flow assumes local auth mode with the demo email
-``demo@hipaa.example`` present in ``local_allowed_emails`` in
-``.streamlit/secrets.toml``.
+The app has no login form to drive: the developer login above signs the
+session in, and it only works while the server is bound to localhost.
 """
 from pathlib import Path
 from playwright.sync_api import sync_playwright
@@ -26,7 +26,6 @@ OUT = Path(__file__).resolve().parent.parent / "docs" / "screenshots"
 OUT.mkdir(parents=True, exist_ok=True)
 
 BASE = "http://localhost:8501"
-EMAIL = "demo@hipaa.example"
 VIEWPORT = {"width": 1440, "height": 1000}
 
 
@@ -46,14 +45,8 @@ def wait_streamlit_idle(page, timeout=15000):
 def login(page):
     page.goto(BASE, wait_until="domcontentloaded")
     wait_streamlit_idle(page)
-    # Look for the local login dropdown.
-    page.wait_for_selector("text=Select an allow listed email", timeout=15000)
-    # Click the selectbox.
-    sel = page.locator("[data-testid='stSelectbox']").first
-    sel.click()
-    page.wait_for_timeout(400)
-    page.get_by_text(EMAIL, exact=True).first.click()
-    wait_streamlit_idle(page)
+    # Already signed in through HIPAA_DEV_LOGIN_EMAIL; wait for the app itself.
+    page.wait_for_selector("text=Demo persona", timeout=15000)
     print("[login] complete")
 
 
